@@ -1,8 +1,6 @@
 #ifndef GUARD_DAYCARE_H
 #define GUARD_DAYCARE_H
 
-#define EGG_HATCH_LEVEL 5
-
 u8 *GetMonNick(struct Pokemon *, u8 *);
 u8 *GetBoxMonNick(struct BoxPokemon *, u8 *);
 u8 CountPokemonInDaycare(struct DayCare *);
