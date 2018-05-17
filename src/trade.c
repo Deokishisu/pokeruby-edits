@@ -4788,11 +4788,23 @@ static void sub_804C1A8(void)
     }
     else
     {
-        ingameTrade = &gIngameTrades[gSpecialVar_0x8004];
-        StringCopy(gStringVar1, ingameTrade->otName);
-        StringCopy10(gStringVar3, ingameTrade->name);
-        GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, string);
-        StringCopy10(gStringVar2, string);
+    	if(gSpecialVar_0x8004 == 0xFF) //Wonder Trade Identifier
+    	{
+    		GetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, string);
+    		StringCopy10(gStringVar3, string);
+    		GetMonData(&gEnemyParty[0], MON_DATA_OT_NAME, string);
+    		StringCopy(gStringVar1, string);
+			GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, string);
+			StringCopy10(gStringVar2, string);
+    	}
+    	else
+    	{
+    		ingameTrade = &gIngameTrades[gSpecialVar_0x8004];
+			StringCopy(gStringVar1, ingameTrade->otName);
+			StringCopy10(gStringVar3, ingameTrade->name);
+			GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, string);
+			StringCopy10(gStringVar2, string);
+    	}
     }
 }
 
