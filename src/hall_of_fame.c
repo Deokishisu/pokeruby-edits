@@ -491,7 +491,13 @@ static void sub_8141FF8(u8 taskID)
             fameMons->mons[i].species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2);
             fameMons->mons[i].tid = GetMonData(&gPlayerParty[i], MON_DATA_OT_ID);
             fameMons->mons[i].personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
-            fameMons->mons[i].lvl = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
+            if(fameMons->mons[i].species == SPECIES_EGG) //if Egg, set level to zero and grab baby species
+            {
+            	fameMons->mons[i].species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+            	fameMons->mons[i].lvl = 0;
+            }
+            else
+            	fameMons->mons[i].lvl = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
             GetMonData(&gPlayerParty[i], MON_DATA_NICKNAME, nick);
             for (j = 0; j < 10; j++)
             {
@@ -605,7 +611,10 @@ static void sub_8142320(u8 taskID)
         field6 = sHallOfFame_MonsHalfTeamPositions[currPokeID][3];
     }
 
-    spriteID = HallOfFame_LoadPokemonPic(currMon->species, xPos, yPos, currPokeID, currMon->tid, currMon->personality);
+    if(currMon->lvl == 0)
+    	spriteID = HallOfFame_LoadPokemonPic((currMon->species) + 60000, xPos, yPos, currPokeID, currMon->tid, currMon->personality);
+    else
+    	spriteID = HallOfFame_LoadPokemonPic(currMon->species, xPos, yPos, currPokeID, currMon->tid, currMon->personality);
     gSprites[spriteID].data[1] = field4;
     gSprites[spriteID].data[2] = field6;
     gSprites[spriteID].data[0] = 0;
@@ -898,7 +907,10 @@ static void sub_8142B04(u8 taskID)
                 posX = sHallOfFame_MonsHalfTeamPositions[i][2];
                 posY = sHallOfFame_MonsHalfTeamPositions[i][3];
             }
-            spriteID = HallOfFame_LoadPokemonPic(currMon->species, posX, posY, i, currMon->tid, currMon->personality);
+            if (currMon->lvl == 0)
+            	spriteID = HallOfFame_LoadPokemonPic((currMon->species) + 60000, posX, posY, i, currMon->tid, currMon->personality);
+            else
+            	spriteID = HallOfFame_LoadPokemonPic(currMon->species, posX, posY, i, currMon->tid, currMon->personality);
             gSprites[spriteID].oam.priority = 1;
             gTasks[taskID].tMonSpriteID(i) = spriteID;
         }
@@ -1062,7 +1074,7 @@ static void HallOfFame_PrintMonInfo(struct HallofFameMon* currMon, u8 a1, u8 a2)
     stringPtr[2] = 0x28;
     stringPtr[3] = EOS;
 
-    if (currMon->species != SPECIES_EGG)
+    if (currMon->lvl != 0 && currMon->species != SPECIES_NONE)
     {
         monData = SpeciesToPokedexNum(currMon->species);
         if (monData != 0xFFFF)
@@ -1079,7 +1091,7 @@ static void HallOfFame_PrintMonInfo(struct HallofFameMon* currMon, u8 a1, u8 a2)
     stringPtr += i;
     stringPtr[0] = EOS;
 
-    if (currMon->species == SPECIES_EGG)
+    if (currMon->lvl == 0 && currMon->species != SPECIES_NONE)
     {
         stringPtr[0] = EXT_CTRL_CODE_BEGIN;
         stringPtr[1] = 0x13;
@@ -1300,7 +1312,10 @@ static u32 HallOfFame_LoadPokemonPic(u16 species, s16 posX, s16 posY, u16 pokeID
 
     LoadSpecialPokePic(&gMonFrontPicTable[species], gMonFrontPicCoords[species].coords, gMonFrontPicCoords[species].y_offset, 0x2000000, gUnknown_0840B5A0[pokeID], species, pid, 1);
 
-    pokePal = GetMonSpritePalFromOtIdPersonality(species, tid, pid);
+    if(species > 60000)
+    	pokePal = GetMonSpritePalFromOtIdPersonality((species) - 60000, tid, pid);
+    else
+    	pokePal = GetMonSpritePalFromOtIdPersonality(species, tid, pid);
     LoadCompressedPalette(pokePal, 16 * pokeID + 256, 0x20);
 
     sub_8143648(pokeID, pokeID);

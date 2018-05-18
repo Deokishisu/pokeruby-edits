@@ -1195,6 +1195,8 @@ const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
     u16 species = GetMonData(mon, MON_DATA_SPECIES2, 0);
     u32 otId = GetMonData(mon, MON_DATA_OT_ID, 0);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, 0);
+    if(species == SPECIES_EGG)
+    	species = GetMonData(mon, MON_DATA_SPECIES, 0);
     return GetMonSpritePalStructFromOtIdPersonality(species, otId, personality);
 }
 

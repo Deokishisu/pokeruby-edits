@@ -210,6 +210,8 @@ gSpriteAnimTable_81E7C64:: @ 81E7C64
 @ 81EB374
 	.include "data/graphics/pokemon/shiny_palette_table.inc"
 
+	.include "data/graphics/pokemon/egg_pic_table.inc"
+
 	.align 2
 gSpriteAnim_81EC134:: @ 81EC134
 	obj_image_anim_frame 0, 7

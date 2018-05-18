@@ -2010,6 +2010,12 @@ static u8 SummaryScreen_LoadPokemonSprite(struct Pokemon *mon, u8 *state)
         species = GetMonData(mon, MON_DATA_SPECIES2);
         personality = GetMonData(mon, MON_DATA_PERSONALITY);
 
+        if(species == SPECIES_EGG) //grabs baby's species and adds 60,000 to it for Egg pics.
+        {
+        	species = GetMonData(mon, MON_DATA_SPECIES);
+        	species = species + 60000;
+        }
+
         HandleLoadSpecialPokePic(
             &gMonFrontPicTable[species],
             gMonFrontPicCoords[species].coords,
@@ -2024,6 +2030,8 @@ static u8 SummaryScreen_LoadPokemonSprite(struct Pokemon *mon, u8 *state)
         species = GetMonData(mon, MON_DATA_SPECIES2);
         personality = GetMonData(mon, MON_DATA_PERSONALITY);
         otId = GetMonData(mon, MON_DATA_OT_ID);
+        if(species == SPECIES_EGG) //grabs the baby species' palette instead of Egg palette
+        	species = GetMonData(mon, MON_DATA_SPECIES);
 
         palette = GetMonSpritePalStructFromOtIdPersonality(species, otId, personality);
         LoadCompressedObjectPalette(palette);
@@ -4477,10 +4485,13 @@ u8 SummaryScreen_CreatePokemonSprite(struct Pokemon *mon)
     spriteId = CreateSprite(&gUnknown_02024E8C, 40, 64, 5);
 
     FreeSpriteOamMatrix(&gSprites[spriteId]);
-
     gSprites[spriteId].data[0] = species;
+<<<<<<< HEAD
     gSprites[spriteId].callback = SummaryScreen_SpritePlayCry;
 
+=======
+	gSprites[spriteId].callback = sub_80A1888;
+>>>>>>> Framework for Egg Sprite Table & Show on Summary Screen
     if (!IsPokeSpriteNotFlipped(species))
         gSprites[spriteId].hFlip = TRUE;
     else

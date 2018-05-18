@@ -1966,13 +1966,19 @@ void sub_809C04C(void *pokemon, u8 a1)
         gPokemonStorageSystemPtr->unk_11f0 = GetMonData(pokemon, MON_DATA_SPECIES2);
         if (gPokemonStorageSystemPtr->unk_11f0 != SPECIES_NONE)
         {
+        	u32 otId = GetMonData(pokemon, MON_DATA_OT_ID);
             gPokemonStorageSystemPtr->unk_11f9 = GetMonData(pkmn, MON_DATA_IS_EGG);
+            if(gPokemonStorageSystemPtr->unk_11f9)
+            	gPokemonStorageSystemPtr->unk_11f0 = GetMonData(pokemon, MON_DATA_SPECIES);
             GetMonData(pkmn, MON_DATA_NICKNAME, gPokemonStorageSystemPtr->unk_11fa);
             StringGetEnd10(gPokemonStorageSystemPtr->unk_11fa);
             gPokemonStorageSystemPtr->unk_11f8 = GetMonData(pkmn, MON_DATA_LEVEL);
             gPokemonStorageSystemPtr->unk_11f7 = GetMonData(pkmn, MON_DATA_MARKINGS);
             gPokemonStorageSystemPtr->unk_11ec = GetMonData(pkmn, MON_DATA_PERSONALITY);
-            gPokemonStorageSystemPtr->unk_11e8 = GetMonSpritePal(pkmn);
+            if(gPokemonStorageSystemPtr->unk_11f9)
+            	gPokemonStorageSystemPtr->unk_11e8 = GetMonSpritePalFromOtIdPersonality(gPokemonStorageSystemPtr->unk_11f0, otId, gPokemonStorageSystemPtr->unk_11ec);
+            else
+            	gPokemonStorageSystemPtr->unk_11e8 = GetMonSpritePal(pkmn);
             gender = GetMonGender(pkmn);
             gPokemonStorageSystemPtr->unk_11f2 = GetMonData(pkmn, MON_DATA_HELD_ITEM);
         }
@@ -1985,6 +1991,8 @@ void sub_809C04C(void *pokemon, u8 a1)
         {
             u32 otId = GetBoxMonData(boxmon, MON_DATA_OT_ID);
             gPokemonStorageSystemPtr->unk_11f9 = GetBoxMonData(boxmon, MON_DATA_IS_EGG);
+            if(gPokemonStorageSystemPtr->unk_11f9)
+            	gPokemonStorageSystemPtr->unk_11f0 = GetBoxMonData(pokemon, MON_DATA_SPECIES);
             GetBoxMonData(boxmon, MON_DATA_NICKNAME, gPokemonStorageSystemPtr->unk_11fa);
             StringGetEnd10(gPokemonStorageSystemPtr->unk_11fa);
             gPokemonStorageSystemPtr->unk_11f8 = GetLevelFromBoxMonExp(boxmon);

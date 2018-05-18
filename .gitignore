@@ -41,3 +41,7 @@ build/
 *.pl
 .vs/
 .projects/ARM/
+.cproject
+.project
+.settings/org.eclipse.core.resources.prefs
+pokeruby.bak

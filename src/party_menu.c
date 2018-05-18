@@ -2797,7 +2797,15 @@ void CreatePartyMenuMonIcon(u8 taskId, u8 monIndex, u8 menuType, struct Pokemon 
     u16 species2 = GetMonData(pokemon, MON_DATA_SPECIES2);
     u32 personality = GetMonData(pokemon, MON_DATA_PERSONALITY);
 
-    u8 spriteId = CreateMonIcon(species2, sub_809D62C, x, y, 5, personality);
+    u8 spriteId;
+
+    if(species2 == SPECIES_EGG) //for unique Egg sprites
+    {
+    	species2 = GetMonData(pokemon, MON_DATA_SPECIES);
+    	species2 = species2 + 60000;
+	}
+    spriteId = CreateMonIcon(species2, sub_809D62C, x, y, 5, personality);
+
     SetMonIconSpriteId(taskId, monIndex, spriteId);
     SetMonIconAnim(spriteId, pokemon);
 }
@@ -4693,8 +4701,8 @@ static const u8 StatDataTypes[] =
 const u8 gUnknown_Debug_839B6CE[] = {0x40, 0, 0, 0, 0x44, 0, 0xFF, 0, 0, 0};
 
 const u8 gUnknown_Debug_839B6D8[] = _(
-    "{STR_VAR_1}かい　じっこう\n"
-    "{STR_VAR_2}たんいじかん　しょうひ");
+    "{STR_VAR_1}ã�‹ã�„ã€€ã�˜ã�£ã�“ã�†\n"
+    "{STR_VAR_2}ã�Ÿã‚“ã�„ã�˜ã�‹ã‚“ã€€ã�—ã‚‡ã�†ã�²");
 
 #endif
 

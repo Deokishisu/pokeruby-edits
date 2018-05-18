@@ -67,7 +67,11 @@ void SpawnBoxIconSprites(u8 boxId)
         {
             u16 species = GetBoxMonData(box, MON_DATA_SPECIES2);
             if (species != SPECIES_NONE)
+            {
+            	if (species == SPECIES_EGG)
+            		species = GetBoxMonData(box, MON_DATA_SPECIES) + 60000;
                 gPokemonStorageSystemPtr->unk_1050[k] = PSS_SpawnMonIconSprite(species, GetBoxMonData(box, MON_DATA_PERSONALITY), 24 * j + 0x64, 24 * i + 0x2c, 2, 18 - j);
+            }
             else
                 gPokemonStorageSystemPtr->unk_1050[k] = NULL;
             box++;
@@ -84,6 +88,8 @@ void sub_8098D20(u8 monId)
     {
         s16 x = 24 * (monId % 6) + 0x64;
         s16 y = 24 * (monId / 6) + 0x2c;
+    	if (species == SPECIES_EGG)
+    		species = GetBoxMonData(mon, MON_DATA_SPECIES) + 60000;
         gPokemonStorageSystemPtr->unk_1050[monId] = PSS_SpawnMonIconSprite(species, GetBoxMonData(mon, MON_DATA_PERSONALITY), x, y, 2, 18 - (monId % 6));
     }
 }
@@ -167,6 +173,8 @@ static u8 sub_8098EE0(u8 col, u16 a1, s16 a2)
         u16 species = GetBoxMonData(gPokemonStorage.boxes[gPokemonStorageSystemPtr->unk_117d] + col, MON_DATA_SPECIES2);
         if (species != SPECIES_NONE)
         {
+        	if (species == SPECIES_EGG)
+        		species = GetBoxMonData(gPokemonStorage.boxes[gPokemonStorageSystemPtr->unk_117d] + col, MON_DATA_SPECIES) + 60000;
             gPokemonStorageSystemPtr->unk_1050[col] = PSS_SpawnMonIconSprite(species, GetBoxMonData(gPokemonStorage.boxes[gPokemonStorageSystemPtr->unk_117d] + col, MON_DATA_PERSONALITY), curX, y, 2, x1);
             if (gPokemonStorageSystemPtr->unk_1050[col])
             {
@@ -246,6 +254,8 @@ void sub_8099200(bool8 a0)
     u16 i;
     u16 species = GetMonData(gPlayerParty + 0, MON_DATA_SPECIES2);
     u32 personality = GetMonData(gPlayerParty + 0, MON_DATA_PERSONALITY);
+    if(species == SPECIES_EGG)
+        species = GetMonData(gPlayerParty + 0, MON_DATA_SPECIES) + 60000;
     gPokemonStorageSystemPtr->unk_1038[0] = PSS_SpawnMonIconSprite(species, personality, 0x68, 0x40, 1, 11);
     count = 1;
     for (i = 1; i < PARTY_SIZE; i++)
@@ -253,6 +263,8 @@ void sub_8099200(bool8 a0)
         species = GetMonData(gPlayerParty + i, MON_DATA_SPECIES2);
         if (species != SPECIES_NONE)
         {
+        	if(species == SPECIES_EGG)
+        	        species = GetMonData(gPlayerParty + i, MON_DATA_SPECIES) + 60000;
             personality = GetMonData(gPlayerParty + i, MON_DATA_PERSONALITY);
             gPokemonStorageSystemPtr->unk_1038[i] = PSS_SpawnMonIconSprite(species, personality, 0x98, (i - 1) * 24 + 0x10, 1, 11);
             count++;
@@ -557,6 +569,12 @@ static u16 PSS_LoadSpeciesIconGfx(u16 a0)
 {
     u16 i;
     u16 retval;
+    u16 eggSpecies = a0;
+
+    if(a0 > 60000) //for unique egg icons
+    {
+    	a0 = a0 - 60000;
+	}
 
     for (i = 0; i < 40; i++)
     {
@@ -576,7 +594,10 @@ static u16 PSS_LoadSpeciesIconGfx(u16 a0)
         gPokemonStorageSystemPtr->unk_1120[i] = a0;
         gPokemonStorageSystemPtr->unk_10d0[i]++;
         retval = i * 16;
-        CpuCopy32(gMonIconTable[a0], BG_CHAR_ADDR(4) + 32 * retval, 0x200);
+        if (eggSpecies > 60000) //for unique egg icons
+        	CpuCopy32(gMonEggIconTable[a0], BG_CHAR_ADDR(4) + 32 * retval, 0x200);
+        else
+        	CpuCopy32(gMonIconTable[a0], BG_CHAR_ADDR(4) + 32 * retval, 0x200);
         return retval;
     }
     return 0xFFFF;
@@ -611,8 +632,16 @@ static struct Sprite *PSS_SpawnMonIconSprite(u16 species, u32 personality, s16 x
     u16 tileNum;
     u8 spriteId;
 
-    species = mon_icon_convert_unown_species_id(species, personality);
-    template.paletteTag = 0xdac0 + gMonIconPaletteIndices[species];
+    if (species > 60000) //unique egg icon handler
+    {
+    	tileNum = PSS_LoadSpeciesIconGfx(species);
+    	template.paletteTag = 0xdac0 + gMonIconPaletteIndices[species - 60000];
+    }
+    else
+    {
+    	species = mon_icon_convert_unown_species_id(species, personality);
+        template.paletteTag = 0xdac0 + gMonIconPaletteIndices[species];
+    }
     tileNum = PSS_LoadSpeciesIconGfx(species);
     if (tileNum == 0xFFFF)
         return NULL;

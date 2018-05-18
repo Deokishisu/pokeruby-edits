@@ -2465,6 +2465,25 @@ extern const u8 gMonIcon_QuestionMark[];
 extern const u8 gMonIcon_Egg[];
 extern const u16 gMonIconPalettes[][16];
 
+//Unique Egg Icons
+
+extern const u8 gMonEggIcon_Vulpix[];
+extern const u8 gMonEggIcon_Oddish[];
+extern const u8 gMonEggIcon_Bellsprout[];
+extern const u8 gMonEggIcon_Slowpoke[];
+extern const u8 gMonEggIcon_Eevee[];
+extern const u8 gMonEggIcon_Cyndaquil[];
+extern const u8 gMonEggIcon_Sentret[];
+extern const u8 gMonEggIcon_Ledyba[];
+extern const u8 gMonEggIcon_Togepi[];
+extern const u8 gMonEggIcon_Aipom[];
+extern const u8 gMonEggIcon_Phanpy[];
+extern const u8 gMonEggIcon_Larvitar[];
+extern const u8 gMonEggIcon_Treecko[];
+extern const u8 gMonEggIcon_Torchic[];
+extern const u8 gMonEggIcon_Mudkip[];
+
+
 // data/graphics.s
 extern const u8 gBagMaleTiles[];
 extern const u8 gBagFemaleTiles[];

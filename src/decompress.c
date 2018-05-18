@@ -99,6 +99,8 @@ void LoadSpecialPokePic(const struct CompressedSpriteSheet *src, u32 b, u32 c, u
         else
             LZ77UnCompWram(gMonFrontPicTable[i].data, dest);
     }
+    else if (species >= 60000) //pokemon_summary_screen.c adds 60,000 to species for egg pics. Egg pic table is set up for this.
+        LZ77UnCompWram(gMonEggPicTable[(species - 60000)].data, dest);
     else if (species > SPECIES_EGG) // is species unknown? draw the ? icon
         LZ77UnCompWram(gMonFrontPicTable[0].data, dest);
     else

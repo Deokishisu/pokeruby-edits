@@ -2,6 +2,7 @@
 #define GUARD_POKEMON_ICON_H
 
 extern const u8 * const gMonIconTable[];
+extern const u8 * const gMonEggIconTable[];   //For unique Egg sprites
 extern const u8 gMonIconPaletteIndices[];
 
 u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality);

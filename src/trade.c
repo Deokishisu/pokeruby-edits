@@ -1078,6 +1078,7 @@ static void sub_8047E44(void)
 static void sub_8047EC0(void)
 {
     int i;
+    u16 species; //for unique Egg icons
 
     switch (gMain.state)
     {
@@ -1164,9 +1165,27 @@ static void sub_8047EC0(void)
             gUnknown_03004824->partyCounts[0] = gPlayerPartyCount;
             gUnknown_03004824->partyCounts[1] = gEnemyPartyCount;
             for (i = 0; i < gUnknown_03004824->partyCounts[0]; i ++)
-                gUnknown_03004824->partyIcons[0][i] = CreateMonIcon(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2), sub_809D62C, gTradeMonSpriteCoords[i][0] * 8 + 14, gTradeMonSpriteCoords[i][1] * 8 - 12, TRUE, GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY));
+            {
+            	if(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2) == SPECIES_EGG) //for unique Egg Icons
+            	{
+            		species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+            		species = species + 60000;
+            		gUnknown_03004824->partyIcons[0][i] = CreateMonIcon(species, sub_809D62C, gTradeMonSpriteCoords[i][0] * 8 + 14, gTradeMonSpriteCoords[i][1] * 8 - 12, TRUE, GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY));
+            	}
+            	else
+            		gUnknown_03004824->partyIcons[0][i] = CreateMonIcon(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2), sub_809D62C, gTradeMonSpriteCoords[i][0] * 8 + 14, gTradeMonSpriteCoords[i][1] * 8 - 12, TRUE, GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY));
+            }
             for (i = 0; i < gUnknown_03004824->partyCounts[1]; i ++)
-                gUnknown_03004824->partyIcons[1][i] = CreateMonIcon(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2, NULL), sub_809D62C, gTradeMonSpriteCoords[6 + i][0] * 8 + 14, gTradeMonSpriteCoords[6 + i][1] * 8 - 12, TRUE, GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY));
+            {
+            	if(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2, NULL) == SPECIES_EGG) //for unique Egg Icons
+            	{
+            		species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+            		species = species + 60000;
+            		gUnknown_03004824->partyIcons[1][i] = CreateMonIcon(species, sub_809D62C, gTradeMonSpriteCoords[6 + i][0] * 8 + 14, gTradeMonSpriteCoords[6 + i][1] * 8 - 12, TRUE, GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY));
+            	}
+            	else
+            		gUnknown_03004824->partyIcons[1][i] = CreateMonIcon(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2, NULL), sub_809D62C, gTradeMonSpriteCoords[6 + i][0] * 8 + 14, gTradeMonSpriteCoords[6 + i][1] * 8 - 12, TRUE, GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY));
+            }
             nullsub_5(2, 0);
             gMain.state ++;
             break;
@@ -1259,6 +1278,7 @@ static void sub_80484F4(void)
 {
     int i;
     struct UnkStructF *unkStructF;
+    u16 species; //for unique Egg Icons
 
     switch (gMain.state)
     {
@@ -1314,9 +1334,27 @@ static void sub_80484F4(void)
             sub_804A41C(0);
             sub_804A41C(1);
             for (i = 0; i < gUnknown_03004824->partyCounts[0]; i ++)
-                gUnknown_03004824->partyIcons[0][i] = CreateMonIcon(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2, NULL), sub_809D62C, gTradeMonSpriteCoords[i][0] * 8 + 14, gTradeMonSpriteCoords[i][1] * 8 - 12, TRUE, GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY));
+            {
+            	if(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2, NULL) == SPECIES_EGG) //for unique Egg Icons; This is when screen is reloaded
+            	{
+            		species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+            		species = species + 60000;
+            		gUnknown_03004824->partyIcons[0][i] = CreateMonIcon(species, sub_809D62C, gTradeMonSpriteCoords[i][0] * 8 + 14, gTradeMonSpriteCoords[i][1] * 8 - 12, TRUE, GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY));
+            	}
+            	else
+            		gUnknown_03004824->partyIcons[0][i] = CreateMonIcon(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2, NULL), sub_809D62C, gTradeMonSpriteCoords[i][0] * 8 + 14, gTradeMonSpriteCoords[i][1] * 8 - 12, TRUE, GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY));
+            }
             for (i = 0; i < gUnknown_03004824->partyCounts[1]; i ++)
-                gUnknown_03004824->partyIcons[1][i] = CreateMonIcon(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2, NULL), sub_809D62C, gTradeMonSpriteCoords[6 + i][0] * 8 + 14, gTradeMonSpriteCoords[6 + i][1] * 8 - 12, TRUE, GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY));
+            {
+            	if(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2, NULL) == SPECIES_EGG) //for unique Egg Icons; This is when screen is reloaded
+            	{
+            		species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+            		species = species + 60000;
+            		gUnknown_03004824->partyIcons[1][i] = CreateMonIcon(species, sub_809D62C, gTradeMonSpriteCoords[6 + i][0] * 8 + 14, gTradeMonSpriteCoords[6 + i][1] * 8 - 12, TRUE, GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY));
+            	}
+            	else
+            		gUnknown_03004824->partyIcons[1][i] = CreateMonIcon(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2, NULL), sub_809D62C, gTradeMonSpriteCoords[6 + i][0] * 8 + 14, gTradeMonSpriteCoords[6 + i][1] * 8 - 12, TRUE, GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY));
+            }
             nullsub_5(2, 0);
             gMain.state ++;
             break;
@@ -3983,9 +4021,20 @@ static void sub_804B2D0(u8 whichParty, u8 a1)
         case 0:
             species = GetMonData(pokemon, MON_DATA_SPECIES2);
             personality = GetMonData(pokemon, MON_DATA_PERSONALITY);
-            HandleLoadSpecialPokePic(&gMonFrontPicTable[species], gMonFrontPicCoords[species].coords, gMonFrontPicCoords[species].y_offset, (u32)gSharedMem, gUnknown_081FAF4C[whichParty * 2 + 1], species, personality);
-            LoadCompressedObjectPalette(GetMonSpritePalStruct(pokemon));
-            gUnknown_03004828->tradeSpecies[whichParty] = species;
+            if(species == SPECIES_EGG) //for unique Egg sprites
+            {
+            	species = GetMonData(pokemon, MON_DATA_SPECIES);
+            	species = species + 60000;
+                HandleLoadSpecialPokePic(&gMonFrontPicTable[species], gMonFrontPicCoords[SPECIES_EGG].coords, gMonFrontPicCoords[SPECIES_EGG].y_offset, (u32)gSharedMem, gUnknown_081FAF4C[whichParty * 2 + 1], species, personality);
+                LoadCompressedObjectPalette(GetMonSpritePalStruct(pokemon));
+                gUnknown_03004828->tradeSpecies[whichParty] = SPECIES_EGG;
+            }
+            else
+            {
+				HandleLoadSpecialPokePic(&gMonFrontPicTable[species], gMonFrontPicCoords[species].coords, gMonFrontPicCoords[species].y_offset, (u32)gSharedMem, gUnknown_081FAF4C[whichParty * 2 + 1], species, personality);
+				LoadCompressedObjectPalette(GetMonSpritePalStruct(pokemon));
+				gUnknown_03004828->tradeSpecies[whichParty] = species;
+            }
             break;
         case 1:
             GetMonSpriteTemplate_803C56C(GetMonSpritePalStruct(pokemon)->tag, v0);

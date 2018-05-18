@@ -15,6 +15,7 @@
 #include "script.h"
 #include "constants/songs.h"
 #include "sound.h"
+#include "constants/species.h"
 #include "string_util.h"
 #include "strings2.h"
 #include "task.h"
@@ -36,6 +37,14 @@ struct EggHatchData
     u8 tileDataStartOffset;
     u8 unused_39;
     u8 eggShardVelocityID;
+};
+
+struct TempHoldEggHatchSprites
+{
+	const u8 *crackgfx;
+	const u8 *shardgfx;
+	const struct CompressedSpritePalette *compressedPalette;
+	bool8 useDefault;
 };
 
 struct EggHatchData* gEggHatchData;
@@ -69,10 +78,42 @@ static void CreateRandomEggShardSprite(void);
 static void CreateEggShardSprite(u8 x, u8 y, s16 data1, s16 data2, s16 data3, u8 spriteAnimIndex);
 
 // graphics
-
+//default Egg
 static const u16 sEggPalette[] = INCBIN_U16("graphics/pokemon/egg/palette.gbapal");
 static const u8 sEggHatchTiles[] = INCBIN_U8("graphics/misc/egg_hatch.4bpp");
 static const u8 sEggShardTiles[] = INCBIN_U8("graphics/misc/egg_shard.4bpp");
+//Unique Eggs
+static const u8 sEggHatchTiles_Vulpix[] = INCBIN_U8("graphics/eggs/vulpix/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Vulpix[] = INCBIN_U8("graphics/eggs/vulpix/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Oddish[] = INCBIN_U8("graphics/eggs/oddish/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Oddish[] = INCBIN_U8("graphics/eggs/oddish/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Bellsprout[] = INCBIN_U8("graphics/eggs/bellsprout/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Bellsprout[] = INCBIN_U8("graphics/eggs/bellsprout/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Slowpoke[] = INCBIN_U8("graphics/eggs/slowpoke/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Slowpoke[] = INCBIN_U8("graphics/eggs/slowpoke/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Eevee[] = INCBIN_U8("graphics/eggs/eevee/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Eevee[] = INCBIN_U8("graphics/eggs/eevee/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Cyndaquil[] = INCBIN_U8("graphics/eggs/cyndaquil/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Cyndaquil[] = INCBIN_U8("graphics/eggs/cyndaquil/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Sentret[] = INCBIN_U8("graphics/eggs/sentret/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Sentret[] = INCBIN_U8("graphics/eggs/sentret/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Ledyba[] = INCBIN_U8("graphics/eggs/ledyba/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Ledyba[] = INCBIN_U8("graphics/eggs/ledyba/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Togepi[] = INCBIN_U8("graphics/eggs/togepi/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Togepi[] = INCBIN_U8("graphics/eggs/togepi/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Aipom[] = INCBIN_U8("graphics/eggs/aipom/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Aipom[] = INCBIN_U8("graphics/eggs/aipom/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Phanpy[] = INCBIN_U8("graphics/eggs/phanpy/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Phanpy[] = INCBIN_U8("graphics/eggs/phanpy/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Larvitar[] = INCBIN_U8("graphics/eggs/larvitar/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Larvitar[] = INCBIN_U8("graphics/eggs/larvitar/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Treecko[] = INCBIN_U8("graphics/eggs/treecko/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Treecko[] = INCBIN_U8("graphics/eggs/treecko/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Torchic[] = INCBIN_U8("graphics/eggs/torchic/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Torchic[] = INCBIN_U8("graphics/eggs/torchic/egg_shard.4bpp");
+static const u8 sEggHatchTiles_Mudkip[] = INCBIN_U8("graphics/eggs/mudkip/egg_hatch.4bpp");
+static const u8 sEggShardTiles_Mudkip[] = INCBIN_U8("graphics/eggs/mudkip/egg_shard.4bpp");
+
 
 static const struct OamData sOamData_820A378 =
 {
@@ -454,8 +495,125 @@ static void Task_EggHatch(u8 taskID)
     }
 }
 
+static struct TempHoldEggHatchSprites determineHatchGraphics(void)
+{
+	u16 species;
+	u32 personality;
+	u32 otId;
+	const struct CompressedSpritePalette *palette;
+	const u8 *cracks;
+	const u8 *shards;
+	bool8 useDefaultSpritePal;
+	gEggHatchData = eEggHatchData;
+	gEggHatchData->eggPartyID = gSpecialVar_0x8004;
+	species = GetMonData(&gPlayerParty[gEggHatchData->eggPartyID], MON_DATA_SPECIES);
+	personality = GetMonData(&gPlayerParty[gEggHatchData->eggPartyID], MON_DATA_PERSONALITY);
+	otId = GetMonData(&gPlayerParty[gEggHatchData->eggPartyID], MON_DATA_OT_ID);
+
+	palette = GetMonSpritePalStructFromOtIdPersonality(species, otId, personality);
+
+	switch (species) //Load each species' graphics
+	{
+	case SPECIES_VULPIX:
+		cracks = sEggHatchTiles_Vulpix;
+		shards = sEggShardTiles_Vulpix;
+		break;
+	case SPECIES_ODDISH:
+		cracks = sEggHatchTiles_Oddish;
+		shards = sEggShardTiles_Oddish;
+		break;
+	case SPECIES_BELLSPROUT:
+		cracks = sEggHatchTiles_Bellsprout;
+		shards = sEggShardTiles_Bellsprout;
+		break;
+	case SPECIES_SLOWPOKE:
+		cracks = sEggHatchTiles_Slowpoke;
+		shards = sEggShardTiles_Slowpoke;
+		break;
+	case SPECIES_EEVEE:
+		cracks = sEggHatchTiles_Eevee;
+		shards = sEggShardTiles_Eevee;
+		break;
+	case SPECIES_CYNDAQUIL:
+		cracks = sEggHatchTiles_Cyndaquil;
+		shards = sEggShardTiles_Cyndaquil;
+		break;
+	case SPECIES_SENTRET:
+		cracks = sEggHatchTiles_Sentret;
+		shards = sEggShardTiles_Sentret;
+		break;
+	case SPECIES_LEDYBA:
+		cracks = sEggHatchTiles_Ledyba;
+		shards = sEggShardTiles_Ledyba;
+		break;
+	case SPECIES_TOGEPI:
+		cracks = sEggHatchTiles_Togepi;
+		shards = sEggShardTiles_Togepi;
+		break;
+	case SPECIES_AIPOM:
+		cracks = sEggHatchTiles_Aipom;
+		shards = sEggShardTiles_Aipom;
+		break;
+	case SPECIES_PHANPY:
+		cracks = sEggHatchTiles_Phanpy;
+		shards = sEggShardTiles_Phanpy;
+		break;
+	case SPECIES_LARVITAR:
+		cracks = sEggHatchTiles_Larvitar;
+		shards = sEggShardTiles_Larvitar;
+		break;
+	case SPECIES_TREECKO:
+		cracks = sEggHatchTiles_Treecko;
+		shards = sEggShardTiles_Treecko;
+		break;
+	case SPECIES_TORCHIC:
+		cracks = sEggHatchTiles_Torchic;
+		shards = sEggShardTiles_Torchic;
+		break;
+	case SPECIES_MUDKIP:
+		cracks = sEggHatchTiles_Mudkip;
+		shards = sEggShardTiles_Mudkip;
+		break;
+	default:
+		cracks = sEggHatchTiles;
+		shards = sEggShardTiles;
+		useDefaultSpritePal = 0;
+		break;
+	}
+	{
+		struct TempHoldEggHatchSprites test =
+		{
+		    .crackgfx = cracks,
+		    .shardgfx = shards,
+			.compressedPalette = palette,
+			.useDefault = useDefaultSpritePal,
+		};
+		return test;
+	}
+}
+
 static void CB2_EggHatch_0(void)
 {
+	bool8 flag;
+	struct TempHoldEggHatchSprites test = determineHatchGraphics();
+	struct SpriteSheet cracking =
+	{
+			.data = test.crackgfx,
+			.size = 2048,
+			.tag = 12345,
+	};
+	struct SpriteSheet shards =
+	{
+			.data = test.shardgfx,
+			.size = 128,
+			.tag = 23456,
+	};
+	struct CompressedSpritePalette monPalette =
+	{
+			.data = test.compressedPalette->data,
+			.tag = 54321,
+	};
+	flag = test.useDefault;
     switch (gMain.state)
     {
     case 0:
@@ -485,9 +643,12 @@ static void CB2_EggHatch_0(void)
         gMain.state++;
         break;
     case 3:
-        LoadSpriteSheet(&sUnknown_0820A3B0);
-        LoadSpriteSheet(&sUnknown_0820A3B8);
-        LoadSpritePalette(&sUnknown_0820A3C0);
+        LoadSpriteSheet(&cracking);
+        LoadSpriteSheet(&shards);
+        if(flag)
+        	LoadSpritePalette(&sUnknown_0820A3C0);
+        else
+        	LoadCompressedObjectPalette(&monPalette);
         gMain.state++;
         break;
     case 4:

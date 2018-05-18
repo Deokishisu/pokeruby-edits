@@ -9609,3 +9609,128 @@ gMonBackPic_UnownQuestionMark:: @ 8E48738
 	.align 2
 gMonIcon_UnownQuestionMark:: @ 8E48938
 	.incbin "graphics/pokemon/unown/icon_question_mark.4bpp"
+
+	//Egg Front Pics and Icon
+
+	.align 2
+gMonEggPic_Vulpix::
+	.incbin "graphics/eggs/vulpix/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Vulpix::
+	.incbin "graphics/eggs/vulpix/icon.4bpp"
+
+	.align 2
+gMonEggPic_Oddish::
+	.incbin "graphics/eggs/oddish/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Oddish::
+	.incbin "graphics/eggs/oddish/icon.4bpp"
+
+	.align 2
+gMonEggPic_Bellsprout::
+	.incbin "graphics/eggs/bellsprout/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Bellsprout::
+	.incbin "graphics/eggs/bellsprout/icon.4bpp"
+
+	.align 2
+gMonEggPic_Slowpoke::
+	.incbin "graphics/eggs/slowpoke/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Slowpoke::
+	.incbin "graphics/eggs/slowpoke/icon.4bpp"
+
+	.align 2
+gMonEggPic_Eevee::
+	.incbin "graphics/eggs/Eevee/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Eevee::
+	.incbin "graphics/eggs/Eevee/icon.4bpp"
+
+	.align 2
+gMonEggPic_Cyndaquil::
+	.incbin "graphics/eggs/cyndaquil/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Cyndaquil::
+	.incbin "graphics/eggs/cyndaquil/icon.4bpp"
+
+	.align 2
+gMonEggPic_Sentret::
+	.incbin "graphics/eggs/sentret/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Sentret::
+	.incbin "graphics/eggs/sentret/icon.4bpp"
+
+	.align 2
+gMonEggPic_Ledyba::
+	.incbin "graphics/eggs/ledyba/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Ledyba::
+	.incbin "graphics/eggs/ledyba/icon.4bpp"
+
+	.align 2
+gMonEggPic_Togepi::
+	.incbin "graphics/eggs/togepi/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Togepi::
+	.incbin "graphics/eggs/togepi/icon.4bpp"
+
+	.align 2
+gMonEggPic_Aipom::
+	.incbin "graphics/eggs/aipom/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Aipom::
+	.incbin "graphics/eggs/aipom/icon.4bpp"
+
+	.align 2
+gMonEggPic_Phanpy::
+	.incbin "graphics/eggs/phanpy/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Phanpy::
+	.incbin "graphics/eggs/phanpy/icon.4bpp"
+
+	.align 2
+gMonEggPic_Larvitar::
+	.incbin "graphics/eggs/larvitar/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Larvitar::
+	.incbin "graphics/eggs/larvitar/icon.4bpp"
+
+	.align 2
+gMonEggPic_Treecko::
+	.incbin "graphics/eggs/treecko/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Treecko::
+	.incbin "graphics/eggs/treecko/icon.4bpp"
+
+	.align 2
+gMonEggPic_Torchic::
+	.incbin "graphics/eggs/torchic/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Torchic::
+	.incbin "graphics/eggs/torchic/icon.4bpp"
+
+	.align 2
+gMonEggPic_Mudkip::
+	.incbin "graphics/eggs/mudkip/pic.4bpp.lz"
+
+	.align 2
+gMonEggIcon_Mudkip::
+	.incbin "graphics/eggs/mudkip/icon.4bpp"
+
+
+

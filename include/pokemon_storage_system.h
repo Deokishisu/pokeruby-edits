@@ -160,8 +160,8 @@ struct PokemonStorageSystemData {
     u8 unk_11e3;
     u8 filler_11e4[4];
     const u8 *unk_11e8;
-    u32 unk_11ec;
-    u16 unk_11f0;
+    u32 unk_11ec; //personality of Pokemon being hovered over?
+    u16 unk_11f0; //species2 of Pokemon being hovered over?
     u16 unk_11f2;
     u8 filler_11f4[2];
     u8 unk_11f6;
@@ -181,8 +181,8 @@ struct PokemonStorageSystemData {
     u16 *unk_12b8;
     struct PokemonMarkMenu unk_12bc;
     struct UnkPSSStruct_2002370 unk_2370;
-    struct Pokemon unk_25b4;
-    struct Pokemon unk_2618;
+    struct Pokemon unk_25b4; //Hand contents?
+    struct Pokemon unk_2618; //Holds Pokemon from a direct swap when hand is full
     u8 unk_267c;
     u8 unk_267d;
     u8 unk_267e;

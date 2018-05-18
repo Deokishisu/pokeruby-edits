@@ -769,6 +769,7 @@ SECTIONS {
         data/debug_mystery_event_scripts.o(.rodata);
         src/libs/m4a_tables.o(.rodata);
         data/sound_data.o(.rodata);
+        src/egg_hatch.o(.data);
     } =0
 
     song_data :
