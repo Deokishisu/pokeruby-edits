@@ -30,6 +30,7 @@
 #include "task.h"
 #include "tv.h"
 #include "scanline_effect.h"
+#include "daycare.h"
 #include "orre_met_location_strings.h"
 
 #define VERSION_GAMECUBE 15
@@ -3060,7 +3061,7 @@ static void PokemonSummaryScreen_PrintTrainerMemo(struct Pokemon *mon, u8 left, 
 
         if (GetMonData(mon, MON_DATA_MET_LEVEL) == 0)
         {
-            ptr = PokemonSummaryScreen_CopyPokemonLevel(ptr, 5);
+            ptr = PokemonSummaryScreen_CopyPokemonLevel(ptr, EGG_HATCH_LEVEL);
             *ptr = CHAR_NEWLINE;
             ptr++;
 
