@@ -386,8 +386,6 @@ SECTIONS {
         src/name_string_util.o(.text);
         src/menu_cursor.o(.text);
         src/wonder_trade.o(.text);
-        src/orre_met_location_handler.o(.text);
-
     } =0
 
     script_data :
@@ -775,7 +773,6 @@ SECTIONS {
         src/libs/m4a_tables.o(.rodata);
         data/sound_data.o(.rodata);
         src/wonder_trade.o(.rodata);
-        data/orre_met_location_strings.o(.rodata);
     } =0
 
     song_data :
