@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_anim_813F0F4.h"
 #include "battle_interface.h"
 #include "battle_message.h"
 #include "data2.h"
@@ -53,8 +54,6 @@ extern u8 gUnknown_02024E68[];
 extern struct SpriteTemplate gUnknown_02024E8C;
 extern u8 gAnimMoveTurn;
 extern struct Window gUnknown_03004210;
-extern u16 gBattle_BG0_Y;
-extern u16 gBattle_BG0_X;
 extern u8 gUnknown_0300434C[];
 extern const u8 BattleText_WallyMenu[];
 extern const u8 BattleText_MenuOptions[];
@@ -65,7 +64,6 @@ extern void Emitcmd35(u8, u16);
 
 extern void nullsub_14(void);
 extern void PrepareBagForWallyTutorial(void);
-extern void sub_8141828();
 extern void sub_8045A5C();
 extern void sub_804777C();
 extern void sub_8043DFC();
@@ -87,7 +85,7 @@ extern void sub_80304A8(void);
 extern void sub_8047858();
 extern void StartBattleIntroAnim();
 extern void oamt_add_pos2_onto_pos1();
-extern void StartTranslateAnimSpriteByDeltas(struct Sprite *);
+extern void StartAnimLinearTranslation(struct Sprite *);
 extern void sub_8030E38(struct Sprite *);
 extern void StoreSpriteCallbackInData();
 extern u8 sub_8046400();
@@ -1312,7 +1310,7 @@ void WallyHandlecmd20(void)
 
 void WallyHandleOpenBag(void)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     gBattleBankFunc[gActiveBattler] = sub_81374C4;
     gBankInMenu = gActiveBattler;
 }
@@ -1484,7 +1482,7 @@ void WallyHandleTrainerBallThrow(void)
     gSprites[gBankSpriteIds[gActiveBattler]].data[0] = 50;
     gSprites[gBankSpriteIds[gActiveBattler]].data[2] = -40;
     gSprites[gBankSpriteIds[gActiveBattler]].data[4] = gSprites[gBankSpriteIds[gActiveBattler]].pos1.y;
-    gSprites[gBankSpriteIds[gActiveBattler]].callback = StartTranslateAnimSpriteByDeltas;
+    gSprites[gBankSpriteIds[gActiveBattler]].callback = StartAnimLinearTranslation;
     gSprites[gBankSpriteIds[gActiveBattler]].data[5] = gActiveBattler;
     StoreSpriteCallbackInData(&gSprites[gBankSpriteIds[gActiveBattler]], sub_8030E38);
     StartSpriteAnim(&gSprites[gBankSpriteIds[gActiveBattler]], 1);

@@ -718,7 +718,7 @@ bool8 InitPartyMenu(void)
         gMain.state++;
         break;
     case 16:
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
         gPaletteFade.bufferTransferDisabled = 0;
         gMain.state++;
         break;
@@ -1213,29 +1213,29 @@ void sub_806BBEC(u8 a)
     }
 }
 
-void sub_806BC3C(u8 monIndex, u8 b)
+// Draws the descriptor text in the mon's party bubble.
+// Descriptor texts are things like "ABLE", "NOT ABLE", "LEARNED", etc.
+void DrawMonDescriptorStatus(u8 monIndex, u8 descriptorOffset)
 {
-    u16 *vramPtr = gUnknown_08376918[IsDoubleBattle()][monIndex];
     u8 i;
-    u16 var1;
+    u32 offset;
+    u16 *vramPtr = gUnknown_08376918[IsDoubleBattle()][monIndex];
+    int paletteNum = 0;
 
-    for (i = 0, var1 = (b / 7) * 32; i <= PARTY_SIZE; i++)
+    for (i = 0; i < 7; i++)
     {
-        u32 offset = i + var1;
-        vramPtr[i] = gUnknown_08E9A300[offset] + 0x10C;
-        vramPtr[i + 0x20] = gUnknown_08E9A300[offset + 0x20] + 0x10C;
+        offset = i + (descriptorOffset / 7) * 32;
+        vramPtr[i] = paletteNum | (gUnknown_08E9A300[offset] + 0x10C);
+        vramPtr[i + 0x20] = paletteNum | (gUnknown_08E9A300[offset + 0x20] + 0x10C);
     }
-
-    // Some dead code was likely optimized out, but the compiler still think r8 was used.
-    asm("":::"r8");
 }
 
-void unref_sub_806BCB8(u8 a)
+void unref_sub_806BCB8(u8 descriptorOffset)
 {
     u8 i;
 
     for (i = 0; i < gPlayerPartyCount; i++)
-        sub_806BC3C(i, a);
+        DrawMonDescriptorStatus(i, descriptorOffset);
 }
 
 // This is ultimately unreferenced, since it's caller is unreferenced.
@@ -1250,19 +1250,19 @@ void sub_806BCE8()
             switch (GetMonGender(&gPlayerParty[i]))
             {
             case MON_MALE:
-                sub_806BC3C(i, 0x54);
+                DrawMonDescriptorStatus(i, 0x54);
                 break;
             case MON_FEMALE:
-                sub_806BC3C(i, 0x62);
+                DrawMonDescriptorStatus(i, 0x62);
                 break;
             default:
-                sub_806BC3C(i, 0x46);
+                DrawMonDescriptorStatus(i, 0x46);
                 break;
             }
         }
         else
         {
-            sub_806BC3C(i, 0x46);
+            DrawMonDescriptorStatus(i, 0x46);
         }
     }    
 }
@@ -3427,10 +3427,10 @@ void PartyMenuDoPrintHP(u8 monIndex, u8 b, u16 currentHP, u16 maxHP)
 {
     u32 *var;
     register u8 *stringVar1 asm("r2") = gStringVar1;
-    register u8 *textPtr asm("r2") = sub_8072C14(stringVar1, currentHP, 15, 1);
+    register u8 *textPtr asm("r2") = AlignInt1InMenuWindow(stringVar1, currentHP, 15, 1);
     textPtr[0] = CHAR_SLASH;
 
-    sub_8072C14(++textPtr, maxHP, 35, 1);
+    AlignInt1InMenuWindow(++textPtr, maxHP, 35, 1);
     var = 0;
 
     CpuFastSet(&var, gUnknown_02039460, 0x1000040);
@@ -3975,7 +3975,7 @@ void Task_TeamMonTMMove3(u8 taskId)
 {
     if (gUnknown_0202E8F6 == 0)
     {
-        PlayFanfare(BGM_FANFA1);
+        PlayFanfare(MUS_FANFA1);
         gTasks[taskId].func = Task_TeamMonTMMove4;
     }
 }
@@ -4059,7 +4059,7 @@ void sub_806F44C(u8 taskId)
 {
     if (gUnknown_0202E8F6 == 0)
     {
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         gTasks[taskId].func = sub_806F3FC;
     }
 }
@@ -4456,7 +4456,7 @@ bool8 IsBlueYellowRedFlute(u16 item)
         return FALSE;
 }
 
-void sub_8070048(u8 taskId, u16 item, TaskFunc func)
+void DoSacredAshItemEffect(u8 taskId, u16 item, TaskFunc func)
 {
     ewram1C000.unk10 = func;
     ewram1C000.unk4 = taskId;
@@ -4473,7 +4473,7 @@ void sub_8070088(u8 taskId)
     u8 taskId2;
 
     gTasks[taskId].func = TaskDummy;
-    if (GetMonData(&gPlayerParty[ewram1C000.primarySelectedMonIndex], MON_DATA_SPECIES) == 0)
+    if (GetMonData(&gPlayerParty[ewram1C000.primarySelectedMonIndex], MON_DATA_SPECIES) == SPECIES_NONE)
     {
         gTasks[taskId].func = sub_80701DC;
     }

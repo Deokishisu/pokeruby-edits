@@ -10,6 +10,12 @@ struct Struct_sub_8078914 {
     u8 field_8;
 };
 
+struct TransformStatus
+{
+    u16 unknown;
+    u16 species;
+};
+
 u8 GetBattlerSpriteCoord(u8, u8);
 u8 sub_8077E44(u8 slot, u16 species, u8 a3);
 u8 GetAnimBattlerSpriteId(u8 bank);
@@ -35,9 +41,9 @@ bool8 IsDoubleBattle(void);
 void sub_8078914();
 u8 sub_80789BC();
 void InitSpriteDataForLinearTranslation(struct Sprite *sprite);
-void InitAnimSpriteTranslationDeltas(struct Sprite *sprite);
-bool8 TranslateAnimSpriteByDeltas(struct Sprite *sprite);
-void TranslateAnimSpriteByDeltasUntil(struct Sprite *sprite);
+void InitAnimLinearTranslation(struct Sprite *sprite);
+bool8 TranslateAnimLinear(struct Sprite *sprite);
+void TranslateAnimLinearUntil(struct Sprite *sprite);
 void sub_8078D44(struct Sprite *sprite);
 void obj_id_set_rotscale(u8 sprite, s16, s16, u16);
 bool8 sub_8078E38();
@@ -66,9 +72,9 @@ void sub_807A960(struct Sprite *sprite);
 void sub_8078A34(struct Sprite *sprite);
 void InitAnimSpritePos(struct Sprite *sprite, u8);
 void sub_8078764(struct Sprite *sprite, u8);
-void StartTranslateAnimSpriteByDeltas(struct Sprite *sprite);
+void StartAnimLinearTranslation(struct Sprite *sprite);
 void sub_8078D60(struct Sprite *sprite);
-void InitAnimSpriteTranslationOverDuration(struct Sprite *sprite);
+void InitAnimArcTranslation(struct Sprite *sprite);
 void WaitAnimForDuration(struct Sprite *sprite);
 void sub_8078CC0(struct Sprite *sprite);
 void sub_8078600(struct Sprite *sprite);
@@ -98,7 +104,7 @@ void sub_80798F4(struct Task *task, u8 a2, const void *a3);
 bool8 sub_807992C(struct Task *task);
 u8 sub_8077FC0(u8 slot);
 void move_anim_8074EE0(struct Sprite *sprite);
-bool8 TranslateAnimSpriteLinearAndSine(struct Sprite *sprite);
+bool8 TranslateAnimArc(struct Sprite *sprite);
 bool8 sub_8078CE8(struct Sprite *sprite);
 void oamt_add_pos2_onto_pos1(struct Sprite *sprite);
 void sub_8078BD4(struct Sprite *sprite);
@@ -108,5 +114,11 @@ void sub_8079AB8(u8 sprite, u8 sprite2);
 u8 sub_807A4A0(int bank, u8 sprite, int species);
 void sub_80794A8(struct Sprite *sprite);
 void sub_807A9BC(struct Sprite *sprite);
+void sub_8078954(struct Struct_sub_8078914*, u8);
+u8 sub_8079F44(u16 species, u8 isBackpic, u8 a3, s16 a4, s16 a5, u8 a6, u32 a7, u32 a8);
+void sub_8079098(struct Sprite *sprite);
+void sub_807A0F4(struct Sprite *sprite);
+void sub_8078634(u8 task);
+u8 sub_80793A8(u8);
 
 #endif // GUARD_ROM_8077ABC_H

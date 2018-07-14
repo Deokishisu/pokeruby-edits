@@ -1,14 +1,14 @@
 Route127:: @ 83058E0
-	.4byte Route127_MapAttributes
+	.4byte Route127_Layout
 	.4byte Route127_MapEvents
 	.4byte Route127_MapScripts
 	.4byte Route127_MapConnections
-	.2byte BGM_DOORO_X3
+	.2byte MUS_DOORO_X3
 	.2byte 43
-	.byte 42
+	.byte MAPSEC_ROUTE_127
 	.byte 0
-	.byte 2
-	.byte 6
+	.byte WEATHER_SUNNY
+	.byte MAP_TYPE_6
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

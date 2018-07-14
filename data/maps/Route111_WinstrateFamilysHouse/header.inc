@@ -1,14 +1,14 @@
 Route111_WinstrateFamilysHouse:: @ 8306C58
-	.4byte House2_MapAttributes
+	.4byte House2_Layout
 	.4byte Route111_WinstrateFamilysHouse_MapEvents
 	.4byte Route111_WinstrateFamilysHouse_MapScripts
 	.4byte 0x0
-	.2byte BGM_GOTOWN
+	.2byte MUS_GOTOWN
 	.2byte 60
-	.byte 26
+	.byte MAPSEC_ROUTE_111
 	.byte 0
-	.byte 0
-	.byte 8
+	.byte WEATHER_NONE
+	.byte MAP_TYPE_INDOOR
 	.2byte 0
 	.byte 0
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

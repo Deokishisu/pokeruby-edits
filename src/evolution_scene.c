@@ -65,14 +65,6 @@ void nullsub_6(void);
 bool32 IsHMMove2(u16 move);
 
 extern struct Window gUnknown_03004210;
-extern u16 gBattle_BG0_X;
-extern u16 gBattle_BG0_Y;
-extern u16 gBattle_BG1_X;
-extern u16 gBattle_BG1_Y;
-extern u16 gBattle_BG2_X;
-extern u16 gBattle_BG2_Y;
-extern u16 gBattle_BG3_X;
-extern u16 gBattle_BG3_Y;
 extern u8 gBattleTerrain;
 extern u8 gReservedSpritePaletteCount;
 extern u16 gMoveToLearn;
@@ -143,7 +135,7 @@ static void Task_BeginEvolutionScene(u8 taskID)
     switch (gTasks[taskID].tState)
     {
     case 0:
-        BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         gTasks[taskID].tState++;
         break;
     case 1:
@@ -344,7 +336,7 @@ static void CB2_EvolutionSceneLoadGraphics(void)
     SetHBlankCallback(EvoDummyFunc);
     SetVBlankCallback(VBlankCB_EvolutionScene);
     SetMainCallback2(CB2_EvolutionSceneUpdate);
-    BeginNormalPaletteFade(-1, 0, 0x10, 0, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
 }
 
 static void CB2_TradeEvolutionSceneLoadGraphics(void)
@@ -419,7 +411,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         }
         break;
     case 6:
-        BeginNormalPaletteFade(-1, 0, 0x10, 0, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
         SetMainCallback2(CB2_TradeEvolutionSceneUpdate);
         REG_DISPCNT = DISPCNT_OBJ_ON | DISPCNT_BG0_ON | DISPCNT_BG1_ON | DISPCNT_OBJ_1D_MAP;
         break;
@@ -545,7 +537,7 @@ static void Task_EvolutionScene(u8 taskID)
     switch (gTasks[taskID].tState)
     {
     case 0:
-        BeginNormalPaletteFade(-1, 0, 0x10, 0, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
         gSprites[sEvoInfo.preEvoSpriteID].invisible = 0;
         gTasks[taskID].tState++;
         break;
@@ -567,16 +559,16 @@ static void Task_EvolutionScene(u8 taskID)
     case 3: // wait for cry, play tu du SE
         if (IsCryFinished())
         {
-            PlaySE(BGM_ME_SHINKA);
+            PlaySE(MUS_ME_SHINKA);
             gTasks[taskID].tState++;
         }
         break;
     case 4: // play evolution music and fade screen black
         if (!IsSEPlaying())
         {
-            PlayNewMapMusic(BGM_SHINKA);
+            PlayNewMapMusic(MUS_SHINKA);
             gTasks[taskID].tState++;
-            BeginNormalPaletteFade(0x1C, 4, 0, 0x10, 0);
+            BeginNormalPaletteFade(0x1C, 4, 0, 16, RGB(0, 0, 0));
         }
         break;
     case 5: // after screen fade, preapre evo sparkles
@@ -633,7 +625,7 @@ static void Task_EvolutionScene(u8 taskID)
             m4aMPlayAllStop();
             PlayCry1(gTasks[taskID].tPostEvoSpecies, 0);
             memcpy(&gPlttBufferUnfaded[0x20], ewram9000_hack, 0x60);
-            BeginNormalPaletteFade(0x1C, 0, 0x10, 0, 0);
+            BeginNormalPaletteFade(0x1C, 0, 16, 0, RGB(0, 0, 0));
             gTasks[taskID].tState++;
         }
         break;
@@ -642,7 +634,7 @@ static void Task_EvolutionScene(u8 taskID)
         {
             StringExpandPlaceholders(gStringVar4, BattleText_FinishEvo);
             Text_InitWindow8002EB0(&gUnknown_03004210, gStringVar4, 144, 2, 15);
-            PlayBGM(BGM_FANFA5);
+            PlayBGM(MUS_FANFA5);
             gTasks[taskID].tState++;
             SetMonData(mon, MON_DATA_SPECIES, (void*)(&gTasks[taskID].tPostEvoSpecies));
             CalculateMonStats(mon);
@@ -675,7 +667,7 @@ static void Task_EvolutionScene(u8 taskID)
             }
             else // no move to learn
             {
-                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
                 gTasks[taskID].tState++;
             }
         }
@@ -695,7 +687,7 @@ static void Task_EvolutionScene(u8 taskID)
         if (!gTasks[sEvoGraphicsTaskID].isActive)
         {
             m4aMPlayAllStop();
-            BeginNormalPaletteFade(0x6001C, 0, 0x10, 0, 0x7FFF);
+            BeginNormalPaletteFade(0x6001C, 0, 16, 0, RGB(31, 31, 31));
             gTasks[taskID].tState++;
         }
         break;
@@ -719,7 +711,7 @@ static void Task_EvolutionScene(u8 taskID)
         if (gUnknown_03004210.state == 0 && !IsSEPlaying())
         {
             sub_8024CEC();
-            PlayFanfare(BGM_FANFA1);
+            PlayFanfare(MUS_FANFA1);
             StrCpyDecodeToDisplayedStringBattle(gBattleStringsTable[3]);
             Text_InitWindow8002EB0(&gUnknown_03004210, gDisplayedStringBattle, 144, 2, 15);
             gTasks[taskID].tLearnsFirstMove = 0x40; // re-used as a counter
@@ -797,7 +789,7 @@ static void Task_EvolutionScene(u8 taskID)
                 {
                     gTasks[taskID].tLearnMoveState = gTasks[taskID].tData9;
                     if (gTasks[taskID].tLearnMoveState == 5)
-                        BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
                 }
             }
             if (gMain.newKeys & B_BUTTON)
@@ -908,17 +900,17 @@ static void Task_TradeEvolutionScene(u8 taskID)
     case 2:
         if (IsCryFinished())
         {
-            m4aSongNumStop(BGM_SHINKA);
-            PlaySE(BGM_ME_SHINKA);
+            m4aSongNumStop(MUS_SHINKA);
+            PlaySE(MUS_ME_SHINKA);
             gTasks[taskID].tState++;
         }
         break;
     case 3:
         if (!IsSEPlaying())
         {
-            PlayBGM(BGM_SHINKA);
+            PlayBGM(MUS_SHINKA);
             gTasks[taskID].tState++;
-            BeginNormalPaletteFade(0x1C, 4, 0, 0x10, 0);
+            BeginNormalPaletteFade(0x1C, 4, 0, 16, RGB(0, 0, 0));
         }
         break;
     case 4:
@@ -975,7 +967,7 @@ static void Task_TradeEvolutionScene(u8 taskID)
         {
             PlayCry1(gTasks[taskID].tPostEvoSpecies, 0);
             memcpy(&gPlttBufferUnfaded[0x20], ewram9000_hack, 0x60);
-            BeginNormalPaletteFade(1, 0, 0x10, 0, 0);
+            BeginNormalPaletteFade(0x1, 0, 16, 0, RGB(0, 0, 0));
             gTasks[taskID].tState++;
         }
         break;
@@ -984,7 +976,7 @@ static void Task_TradeEvolutionScene(u8 taskID)
         {
             StringExpandPlaceholders(gStringVar4, BattleText_FinishEvo);
             Text_InitWindow8002EB0(&gUnknown_03004828->window, gStringVar4, gUnknown_03004828->textWindowBaseTileNum, 2, 15);
-            PlayFanfare(BGM_FANFA5);
+            PlayFanfare(MUS_FANFA5);
             gTasks[taskID].tState++;
             SetMonData(mon, MON_DATA_SPECIES, (void*)(&gTasks[taskID].tPostEvoSpecies));
             CalculateMonStats(mon);
@@ -1016,7 +1008,7 @@ static void Task_TradeEvolutionScene(u8 taskID)
             }
             else
             {
-                PlayBGM(BGM_SHINKA);
+                PlayBGM(MUS_SHINKA);
                 Text_InitWindow8002EB0(&gUnknown_03004828->window, gOtherText_LinkStandby2, gUnknown_03004828->textWindowBaseTileNum, 2, 15);
                 gTasks[taskID].tState++;
             }
@@ -1033,7 +1025,7 @@ static void Task_TradeEvolutionScene(u8 taskID)
         if (gUnknown_03004828->window.state == 0 && !IsSEPlaying())
         {
             sub_8024CEC();
-            PlayFanfare(BGM_FANFA1);
+            PlayFanfare(MUS_FANFA1);
             StrCpyDecodeToDisplayedStringBattle(gBattleStringsTable[3]);
             Text_InitWindow8002EB0(&gUnknown_03004828->window, gDisplayedStringBattle, gUnknown_03004828->textWindowBaseTileNum, 2, 15);
             gTasks[taskID].tLearnsFirstMove = 0x40; // re-used as a counter
@@ -1116,7 +1108,7 @@ static void Task_TradeEvolutionScene(u8 taskID)
                 {
                     gTasks[taskID].tLearnMoveState = gTasks[taskID].tData9;
                     if (gTasks[taskID].tLearnMoveState == 5)
-                        BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
                 }
             }
             if (gMain.newKeys & B_BUTTON)

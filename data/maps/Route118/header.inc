@@ -1,14 +1,14 @@
 Route118:: @ 83057E4
-	.4byte Route118_MapAttributes
+	.4byte Route118_Layout
 	.4byte Route118_MapEvents
 	.4byte Route118_MapScripts
 	.4byte Route118_MapConnections
-	.2byte BGM_ROUTE_118
+	.2byte MUS_ROUTE_118
 	.2byte 34
-	.byte 33
+	.byte MAPSEC_ROUTE_118
 	.byte 0
-	.byte 2
-	.byte 3
+	.byte WEATHER_SUNNY
+	.byte MAP_TYPE_ROUTE
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

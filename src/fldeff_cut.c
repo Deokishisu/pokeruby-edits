@@ -1,12 +1,12 @@
+
 #include "global.h"
 #include "field_camera.h"
 #include "field_effect.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
-#include "map_obj_lock.h"
+#include "event_obj_lock.h"
 #include "metatile_behavior.h"
-#include "metatile_behaviors.h"
 #include "pokemon_menu.h"
 #include "overworld.h"
 #include "rom6.h"
@@ -17,7 +17,8 @@
 #include "trig.h"
 #include "ewram.h"
 #include "constants/field_effects.h"
-#include "constants/map_objects.h"
+#include "constants/event_objects.h"
+#include "constants/metatile_behaviors.h"
 #include "constants/songs.h"
 
 extern void (*gFieldCallback)(void);
@@ -89,9 +90,9 @@ void Debug_SetUpFieldMove_Cut(void)
 {
     s16 x, y;
     u8 i, j;
-    u8 metatile;
+    u8 metatileBehavior;
 
-    if (SetLastTalkedObjectInFrontOfPlayer(MAP_OBJ_GFX_CUTTABLE_TREE) == TRUE)
+    if (SetLastTalkedObjectInFrontOfPlayer(EVENT_OBJ_GFX_CUTTABLE_TREE) == TRUE)
     {
         gLastFieldPokeMenuOpened = 0;
         FieldCallback_CutTree();
@@ -107,9 +108,9 @@ void Debug_SetUpFieldMove_Cut(void)
             x = j - 1 + gPlayerFacingPosition.x;
             if (MapGridGetZCoordAt(x, y) == gPlayerFacingPosition.height)
             {
-                metatile = MapGridGetMetatileBehaviorAt(x, y);
-                if (MetatileBehavior_IsPokeGrass(metatile) == TRUE
-                 || MetatileBehavior_IsAshGrass(metatile) == TRUE)
+                metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+                if (MetatileBehavior_IsPokeGrass(metatileBehavior) == TRUE
+                 || MetatileBehavior_IsAshGrass(metatileBehavior) == TRUE)
                 {
                     gLastFieldPokeMenuOpened = 0;
                     FieldCallback_CutGrass();
@@ -130,7 +131,7 @@ bool8 SetUpFieldMove_Cut(void)
     u8 i, j;
     u8 tileBehavior;
 
-    if (SetLastTalkedObjectInFrontOfPlayer(MAP_OBJ_GFX_CUTTABLE_TREE) == TRUE)
+    if (SetLastTalkedObjectInFrontOfPlayer(EVENT_OBJ_GFX_CUTTABLE_TREE) == TRUE)
     {
         // Standing in front of cuttable tree.
         gFieldCallback = FieldCallback_PrepareFadeInFromMenu;
@@ -374,7 +375,7 @@ static void CutGrassSpriteCallbackEnd(struct Sprite *sprite)
     for (i = 1; i < 8; i++)
         DestroySprite(&gSprites[eCutGrassSpriteArray[i]]);
     FieldEffectStop(&gSprites[eCutGrassSpriteArray[0]], FLDEFF_CUT_GRASS);
-    sub_8064E2C();
+    ScriptUnfreezeEventObjects();
     ScriptContext2_Disable();
 }
 

@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_anim_813F0F4.h"
 #include "battle_interface.h"
 #include "data2.h"
 #include "battle_811DA74.h"
@@ -48,8 +49,6 @@ extern u8 gAnimFriendship;
 extern u16 gWeatherMoveAnim;
 extern u8 gAnimMoveTurn;
 extern struct Window gUnknown_03004210;
-extern u16 gBattle_BG0_Y;
-extern u16 gBattle_BG0_X;
 extern MainCallback gPreBattleCallback1;
 extern void (*gBattleBankFunc[])(void);
 extern u8 gHealthboxIDs[];
@@ -65,7 +64,6 @@ extern void sub_8030E38(struct Sprite *);
 extern void StartBattleIntroAnim();
 extern void sub_8047858();
 extern void move_anim_start_t2_for_situation();
-extern void load_gfxc_health_bar();
 extern void sub_8043D84();
 extern void BufferStringBattle();
 extern void sub_8031F24(void);
@@ -76,7 +74,7 @@ extern u8 sub_8031720();
 extern u8 mplay_80342A4();
 extern void oamt_add_pos2_onto_pos1();
 extern void StoreSpriteCallbackInData();
-extern void StartTranslateAnimSpriteByDeltas(struct Sprite *);
+extern void StartAnimLinearTranslation(struct Sprite *);
 extern void sub_80105EC(struct Sprite *);
 extern s32 sub_803FC34(u16);
 extern void LoadPlayerTrainerBankSprite();
@@ -100,7 +98,6 @@ extern void sub_8043DB0();
 extern void move_anim_start_t4();
 extern void c3_0802FDF4(u8);
 extern void sub_8031F88();
-extern void sub_8141828();
 extern void c2_8011A1C(void);
 
 // this file's functions
@@ -1092,7 +1089,7 @@ void LinkPartnerHandlecmd3(void)
     u8 *dst;
     u8 i;
 
-    MEMSET_ALT(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]] + gBattleBufferA[gActiveBattler][1], 
+    MEMSET_ALT(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]] + gBattleBufferA[gActiveBattler][1],
         gBattleBufferA[gActiveBattler][3 + i], gBattleBufferA[gActiveBattler][2], i, dst);
 
     LinkPartnerBufferExecCompleted();
@@ -1227,7 +1224,7 @@ void LinkPartnerHandleTrainerSlideBack(void)
     gSprites[gBankSpriteIds[gActiveBattler]].data[0] = 35;
     gSprites[gBankSpriteIds[gActiveBattler]].data[2] = -40;
     gSprites[gBankSpriteIds[gActiveBattler]].data[4] = gSprites[gBankSpriteIds[gActiveBattler]].pos1.y;
-    gSprites[gBankSpriteIds[gActiveBattler]].callback = StartTranslateAnimSpriteByDeltas;
+    gSprites[gBankSpriteIds[gActiveBattler]].callback = StartAnimLinearTranslation;
     StoreSpriteCallbackInData(&gSprites[gBankSpriteIds[gActiveBattler]], SpriteCallbackDummy);
     gBattleBankFunc[gActiveBattler] = sub_811DB1C;
 }
@@ -1579,7 +1576,7 @@ void LinkPartnerHandleTrainerBallThrow(void)
     gSprites[gBankSpriteIds[gActiveBattler]].data[0] = 50;
     gSprites[gBankSpriteIds[gActiveBattler]].data[2] = -40;
     gSprites[gBankSpriteIds[gActiveBattler]].data[4] = gSprites[gBankSpriteIds[gActiveBattler]].pos1.y;
-    gSprites[gBankSpriteIds[gActiveBattler]].callback = StartTranslateAnimSpriteByDeltas;
+    gSprites[gBankSpriteIds[gActiveBattler]].callback = StartAnimLinearTranslation;
     gSprites[gBankSpriteIds[gActiveBattler]].data[5] = gActiveBattler;
     StoreSpriteCallbackInData(&gSprites[gBankSpriteIds[gActiveBattler]], sub_8030E38);
     StartSpriteAnim(&gSprites[gBankSpriteIds[gActiveBattler]], 1);

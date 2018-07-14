@@ -24,8 +24,6 @@ extern u8 gActiveBattler;
 extern const u8 BattleText_MenuOptionsSafari[];
 
 extern void *gBattleBankFunc[];
-extern u16 gBattle_BG0_Y;
-extern u16 gBattle_BG0_X;
 extern u8 gBattleBufferA[][0x200];
 extern bool8 gDoingBattleAnim;
 extern u8 gBankSpriteIds[];
@@ -514,7 +512,7 @@ void SafariHandlecmd20(void)
 
 void SafariHandleOpenBag(void)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     gBattleBankFunc[gActiveBattler] = sub_812B724;
     gBankInMenu = gActiveBattler;
 }

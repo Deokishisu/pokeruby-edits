@@ -25,14 +25,13 @@ extern u8 gLastFieldPokeMenuOpened;
 extern u8 gUnknown_020384F0;
 extern struct UnknownPokemonStruct2 gMultiPartnerParty[3];
 extern u8 gUnknown_0202E8F6;
-extern struct Pokemon gUnknown_030042FC[];
 extern const u16 gBattleTowerBannedSpecies[];
 
 EWRAM_DATA u8 gSelectedOrderFromParty[3] = {0};
 
 extern u8 sub_806BD58(u8, u8);
 extern void PartyMenuPrintMonsLevelOrStatus(void);
-extern void sub_806BC3C(u8, u8);
+extern void DrawMonDescriptorStatus(u8, u8);
 extern u8 GetMonStatusAndPokerus();
 extern void PartyMenuPrintHP();
 extern bool8 sub_80F9344(void); 
@@ -131,16 +130,16 @@ bool8 SetupBattleTowerPartyMenu(void)
             {
                 if (gSelectedOrderFromParty[j] == i + 1)
                 {
-                    sub_806BC3C(i, j * 14 + 0x1C);
+                    DrawMonDescriptorStatus(i, j * 14 + 0x1C);
                     break;
                 }
             }
             if (j == 3)
             {
                 if (IsMonAllowedInBattleTower(&gPlayerParty[i]) == TRUE)
-                    sub_806BC3C(i, 0x70);
+                    DrawMonDescriptorStatus(i, 0x70);
                 else
-                    sub_806BC3C(i, 0x7E);
+                    DrawMonDescriptorStatus(i, 0x7E);
             }
         }
         ewram1B000_alt.setupState++;
@@ -204,13 +203,13 @@ static u8 sub_81220C8(void)
     {
         u8 j;
 
-        ewram1B000.unk282 = GetMonData(&gUnknown_030042FC[gSelectedOrderFromParty[i]], MON_DATA_SPECIES);
-        ewram1B000.unk280 = GetMonData(&gUnknown_030042FC[gSelectedOrderFromParty[i]], MON_DATA_HELD_ITEM);
+        ewram1B000.unk282 = GetMonData(&gPlayerParty[gSelectedOrderFromParty[i] - 1], MON_DATA_SPECIES);
+        ewram1B000.unk280 = GetMonData(&gPlayerParty[gSelectedOrderFromParty[i] - 1], MON_DATA_HELD_ITEM);
         for (j = i + 1; j < 3; j++)
         {
-            if (ewram1B000.unk282 == GetMonData(&gUnknown_030042FC[gSelectedOrderFromParty[j]], MON_DATA_SPECIES))
+            if (ewram1B000.unk282 == GetMonData(&gPlayerParty[gSelectedOrderFromParty[j] - 1], MON_DATA_SPECIES))
                 return 0x12;
-            if (ewram1B000.unk280 != 0 && ewram1B000.unk280 == GetMonData(&gUnknown_030042FC[gSelectedOrderFromParty[j]], MON_DATA_HELD_ITEM))
+            if (ewram1B000.unk280 != 0 && ewram1B000.unk280 == GetMonData(&gPlayerParty[gSelectedOrderFromParty[j] - 1], MON_DATA_HELD_ITEM))
                 return 0x13;
         }
     }
@@ -231,7 +230,7 @@ static const struct MenuAction2 sBattleTowerEntryMenuItems[] =
     {OtherText_Summary, BattleTowerEntryMenuCallback_Summary},
     {OtherText_Enter2, BattleTowerEntryMenuCallback_Enter},
     {OtherText_NoEntry, BattleTowerEntryMenuCallback_NoEntry},
-    {gUnknownText_Exit, BattleTowerEntryMenuCallback_Exit},
+    {gOtherText_Exit, BattleTowerEntryMenuCallback_Exit},
 };
 
 static const u8 gUnknown_084017D0[] = {1, 0, 3};
@@ -305,7 +304,7 @@ void HandleBattleTowerPartyMenu(u8 taskId)
         case B_BUTTON:
             PlaySE(SE_SELECT);
             ClearPartySelection();
-            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
             gTasks[taskId].func = sub_8122450;
             break;
         }
@@ -386,7 +385,7 @@ static void sub_81224A8(u8 taskId)
     {
         if (gSelectedOrderFromParty[0] != 0)
         {
-            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
             gTasks[taskId].func = sub_8122450;
         }
         else
@@ -441,7 +440,7 @@ static void sub_81225D4(u8 taskId)
 // Summary callback?
 static void BattleTowerEntryMenuCallback_Summary(u8 taskId)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     gTasks[taskId].func = sub_81225D4;
 }
 
@@ -454,7 +453,7 @@ static void BattleTowerEntryMenuCallback_Enter(u8 taskId)
         if (gSelectedOrderFromParty[i] == 0)
         {
             gSelectedOrderFromParty[i] = gLastFieldPokeMenuOpened + 1;
-            sub_806BC3C(gLastFieldPokeMenuOpened, i * 14 + 0x1C);
+            DrawMonDescriptorStatus(gLastFieldPokeMenuOpened, i * 14 + 0x1C);
             if (i == 2)
                 SelectBattleTowerOKButton(taskId);
             BattleTowerEntryMenuCallback_Exit(taskId);
@@ -506,11 +505,11 @@ static void BattleTowerEntryMenuCallback_NoEntry(u8 taskId)
             break;  // exit loop
         }
     }
-    sub_806BC3C(gLastFieldPokeMenuOpened, 0x70);
+    DrawMonDescriptorStatus(gLastFieldPokeMenuOpened, 0x70);
     if (gSelectedOrderFromParty[0] != 0)
-        sub_806BC3C(gSelectedOrderFromParty[0] - 1, 0x1C);
+        DrawMonDescriptorStatus(gSelectedOrderFromParty[0] - 1, 0x1C);
     if (gSelectedOrderFromParty[1] != 0)
-        sub_806BC3C(gSelectedOrderFromParty[1] - 1, 0x2A);
+        DrawMonDescriptorStatus(gSelectedOrderFromParty[1] - 1, 0x2A);
     BattleTowerEntryMenuCallback_Exit(taskId);
 }
 
@@ -700,7 +699,7 @@ static void sub_8122C18(u8 taskId)
     gTasks[taskId].data[0]++;
     if (gTasks[taskId].data[0] == 256)
     {
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         gTasks[taskId].func = sub_8122450;
     }
 }
@@ -781,7 +780,7 @@ static const struct MenuAction2 sDaycareStorageMenuItems[] =
 {
     {OtherText_Store, DaycareStorageMenuCallback_Store},
     {OtherText_Summary, DaycareStorageMenuCallback_Summary},
-    {gUnknownText_Exit, DaycareStorageMenuCallback_Exit},
+    {gOtherText_Exit, DaycareStorageMenuCallback_Exit},
 };
 
 static const u8 gUnknown_08401808[] = {0, 1, 2};
@@ -919,7 +918,7 @@ static void sub_8123034(u8 taskId)
 
 static void DaycareStorageMenuCallback_Summary(u8 taskId)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     gTasks[taskId].func = sub_8123034;
 }
 
@@ -934,7 +933,7 @@ static void DaycareStorageMenuCallback_Exit(u8 taskId)
 
 void sub_8123138(u8 taskId)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     gTasks[taskId].func = sub_8123170;
 }
 

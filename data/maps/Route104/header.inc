@@ -1,14 +1,14 @@
 Route104:: @ 830565C
-	.4byte Route104_MapAttributes
+	.4byte Route104_Layout
 	.4byte Route104_MapEvents
 	.4byte Route104_MapScripts
 	.4byte Route104_MapConnections
-	.2byte BGM_NEXTROAD
+	.2byte MUS_NEXTROAD
 	.2byte 20
-	.byte 19
+	.byte MAPSEC_ROUTE_104
 	.byte 0
-	.byte 2
-	.byte 3
+	.byte WEATHER_SUNNY
+	.byte MAP_TYPE_ROUTE
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

@@ -1,10 +1,6 @@
 #include "global.h"
-#include "constants/decorations.h"
 #include "secret_base.h"
 #include "decoration.h"
-#include "constants/species.h"
-#include "constants/items.h"
-#include "constants/moves.h"
 #include "event_data.h"
 #include "field_camera.h"
 #include "field_effect.h"
@@ -29,11 +25,16 @@
 #include "overworld.h"
 #include "script.h"
 #include "sound.h"
-#include "constants/species.h"
 #include "string_util.h"
 #include "strings.h"
 #include "task.h"
 #include "text.h"
+#include "constants/bg_event_constants.h"
+#include "constants/decorations.h"
+#include "constants/items.h"
+#include "constants/map_types.h"
+#include "constants/moves.h"
+#include "constants/species.h"
 #include "constants/vars.h"
 
 
@@ -98,7 +99,7 @@ const u8 gUnknown_083D1374[] = {
 
 const struct MenuAction2 gUnknown_083D13D4[] = {
     {SecretBaseText_DelRegist, sub_80BCA84},
-    {gUnknownText_Exit, sub_80BCBF8}
+    {gOtherText_Exit, sub_80BCBF8}
 };
 
 const struct YesNoFuncTable gUnknown_083D13E4 = {
@@ -110,7 +111,6 @@ const u8 gUnknown_083D13EC[] = {
     0x23,0x24,0xF,0x1F,0x21,0x2F,0xE,0x14,0x20,0x22,0x0,0x0
 };
 
-extern void *gUnknown_0300485C;
 extern u8 gUnknown_081A2E14[];
 extern u8 UnknownString_81A1BB2[];
 extern u8 UnknownString_81A1F67[];
@@ -241,11 +241,11 @@ void sub_80BB764(s16 *arg1, s16 *arg2, u16 arg3)
 {
     s16 x, y;
 
-    for (y=0; y<gMapHeader.mapData->height; y++)
+    for (y=0; y<gMapHeader.mapLayout->height; y++)
     {
-        for (x=0; x<gMapHeader.mapData->width; x++)
+        for (x=0; x<gMapHeader.mapLayout->width; x++)
         {
-            if ((gMapHeader.mapData->map[y * gMapHeader.mapData->width + x] & 0x3ff) == arg3)
+            if ((gMapHeader.mapLayout->map[y * gMapHeader.mapLayout->width + x] & 0x3ff) == arg3)
             {
                 *arg1 = x;
                 *arg2 = y;
@@ -318,7 +318,7 @@ void sub_80BB970(struct MapEvents *events)
 
     for (bgevidx = 0; bgevidx < events->bgEventCount; bgevidx++)
     {
-        if (events->bgEvents[bgevidx].kind == 8)
+        if (events->bgEvents[bgevidx].kind == BG_EVENT_SECRET_BASE)
         {
             for (jdx = 0; jdx < MAX_SECRET_BASES; jdx++)
             {
@@ -363,7 +363,7 @@ void sub_80BBA48(u8 taskid)
         if (gSaveBlock1.secretBases[curbaseid].sbr_field_10 < 0xff)
             gSaveBlock1.secretBases[curbaseid].sbr_field_10++;
         sub_80BBA14();
-        warp_in();
+        WarpIntoMap();
         gFieldCallback = sub_8080990;
         SetMainCallback2(CB2_LoadMap);
         DestroyTask(taskid);
@@ -387,7 +387,7 @@ bool8 sub_80BBB24(void)
 
 void sub_80BBB50(u8 taskid)
 {
-    FieldObjectTurn(&(gMapObjects[gPlayerAvatar.mapObjectId]), 2);
+    EventObjectTurn(&(gEventObjects[gPlayerAvatar.eventObjectId]), 2);
     if (IsWeatherNotFadingIn() == 1)
     {
         EnableBothScriptContexts();
@@ -416,7 +416,7 @@ void sub_80BBBEC(u8 taskid)
     {
         idx = 4 * (gCurrentSecretBaseId / 10);
         Overworld_SetWarpDestination(gSaveBlock1.location.mapGroup, gSaveBlock1.location.mapNum, -1, gUnknown_083D1374[idx + 2], gUnknown_083D1374[idx + 3]);
-        warp_in();
+        WarpIntoMap();
         gFieldCallback = sub_80BBB90;
         SetMainCallback2(CB2_LoadMap);
         DestroyTask(taskid);
@@ -500,25 +500,25 @@ void sub_80BBDD0(void)
             permission = gDecorations[roomdecor[decidx]].permission;
             if (permission == DECORPERM_SOLID_MAT)
             {
-                for (objid = 0; objid < gMapHeader.events->mapObjectCount; objid++)
+                for (objid = 0; objid < gMapHeader.events->eventObjectCount; objid++)
                 {
-                    if (gMapHeader.events->mapObjects[objid].flagId == gSpecialVar_0x8004 + 0xAE)
+                    if (gMapHeader.events->eventObjects[objid].flagId == gSpecialVar_0x8004 + 0xAE)
                         break;
                 }
-                if (objid != gMapHeader.events->mapObjectCount)
+                if (objid != gMapHeader.events->eventObjectCount)
                 {
                     gSpecialVar_0x8006 = roomdecorpos[decidx] >> 4;
                     gSpecialVar_0x8007 = roomdecorpos[decidx] & 0xF;
                     metatile = MapGridGetMetatileBehaviorAt(gSpecialVar_0x8006 + 7, gSpecialVar_0x8007 + 7);
-                    if (sub_80572D8(metatile) == TRUE || sub_80572EC(metatile) == TRUE)
+                    if (MetatileBehavior_IsSecretBaseLargeMatEdge(metatile) == TRUE || MetatileBehavior_IsLargeMatCenter(metatile) == TRUE)
                     {
-                        gSpecialVar_Result = gMapHeader.events->mapObjects[objid].graphicsId + VAR_0x3F20;
+                        gSpecialVar_Result = gMapHeader.events->eventObjects[objid].graphicsId + VAR_0x3F20;
                         VarSet(gSpecialVar_Result, gDecorations[roomdecor[decidx]].tiles[0]);
-                        gSpecialVar_Result = gMapHeader.events->mapObjects[objid].localId;
+                        gSpecialVar_Result = gMapHeader.events->eventObjects[objid].localId;
                         FlagClear(gSpecialVar_0x8004 + 0xAE);
                         show_sprite(gSpecialVar_Result, gSaveBlock1.location.mapNum, gSaveBlock1.location.mapGroup);
                         sub_805C0F8(gSpecialVar_Result, gSaveBlock1.location.mapNum, gSaveBlock1.location.mapGroup, gSpecialVar_0x8006, gSpecialVar_0x8007);
-                        sub_805C78C(gSpecialVar_Result, gSaveBlock1.location.mapNum, gSaveBlock1.location.mapGroup);
+                        TryOverrideTemplateCoordsForEventObject(gSpecialVar_Result, gSaveBlock1.location.mapNum, gSaveBlock1.location.mapGroup);
                         gSpecialVar_0x8004 ++;
                     }
                 }
@@ -539,7 +539,7 @@ void SetCurrentSecretBaseFromPosition(struct MapPosition *position, struct MapEv
 
     for (i = 0; i < events->bgEventCount; i++)
     {
-        if (events->bgEvents[i].kind == 8 && position->x == events->bgEvents[i].x + 7
+        if (events->bgEvents[i].kind == BG_EVENT_SECRET_BASE && position->x == events->bgEvents[i].x + 7
          && position->y == events->bgEvents[i].y + 7)
         {
             gCurrentSecretBaseId = events->bgEvents[i].bgUnion.secretBaseId;
@@ -578,7 +578,7 @@ void sub_80BC074(u8 taskid)
         break;
     case 2:
         copy_saved_warp2_bank_and_enter_x_to_warp1(0x7E);
-        warp_in();
+        WarpIntoMap();
         gFieldCallback = mapldr_default;
         SetMainCallback2(CB2_LoadMap);
         ScriptContext2_Disable();
@@ -872,7 +872,7 @@ void sub_80BC474(void)
 
     for (eventId = 0; eventId < mapEvents->bgEventCount; eventId++)
     {
-        if (mapEvents->bgEvents[eventId].kind == 8
+        if (mapEvents->bgEvents[eventId].kind == BG_EVENT_SECRET_BASE
          && gSaveBlock1.secretBases[0].secretBaseId == mapEvents->bgEvents[eventId].bgUnion.secretBaseId)
         {
             u16 i;
@@ -1011,7 +1011,7 @@ void sub_80BC6B0(u8 taskId)
     if (n < 8)
     {
         Menu_BlankWindowRect(18, 2 * n + 2, 28, 2 * n + 3);
-        Menu_PrintText(gUnknownText_Exit, 18, 2 * n + 2);
+        Menu_PrintText(gOtherText_Exit, 18, 2 * n + 2);
         DestroyVerticalScrollIndicator(BOTTOM_ARROW);
         if (n != 7)
             Menu_BlankWindowRect(18, ((n << 25) + (1 << 26)) >> 24, 28, 18); // the shifts are needed to match
@@ -1309,7 +1309,7 @@ void sub_80BCE90()
 void sub_80BCF1C(u8 taskId)
 {
     s16 x, y;
-    u32 behavior;
+    u32 metatileBehavior;
     s16 *taskData = gTasks[taskId].data;
 
     switch (taskData[1])
@@ -1325,15 +1325,15 @@ void sub_80BCF1C(u8 taskId)
             taskData[2] = x;
             taskData[3] = y;
 
-            behavior = MapGridGetMetatileBehaviorAt(x, y);
-            if (sub_8057350(behavior) == TRUE)
-                DoYellowCave4Sparkle();
-            else if (sub_8057314(behavior) == TRUE)
-                sub_80C68A4(MapGridGetMetatileIdAt(x, y), x, y);
-            else if (sub_8057328(behavior) == TRUE)
-                sub_80C6A54(x, y);
-            else if (sub_805733C(behavior) == TRUE)
-                DoDecorationSoundEffect(MapGridGetMetatileIdAt(x, y));
+            metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+            if (MetatileBehavior_IsSecretBaseGlitterMat(metatileBehavior) == TRUE)
+                DoSecretBaseGlitterMatSparkle();
+            else if (MetatileBehavior_IsSecretBaseBalloon(metatileBehavior) == TRUE)
+                PopSecretBaseBalloon(MapGridGetMetatileIdAt(x, y), x, y);
+            else if (MetatileBehavior_IsSecretBaseBreakableDoor(metatileBehavior) == TRUE)
+                ShatterSecretBaseBreakableDoor(x, y);
+            else if (MetatileBehavior_IsSecretBaseMusicNoteMat(metatileBehavior) == TRUE)
+                PlaySecretBaseMusicNoteMatSound(MapGridGetMetatileIdAt(x, y));
         }
         break;
     case 2:

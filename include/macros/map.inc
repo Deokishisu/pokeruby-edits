@@ -14,40 +14,47 @@
 	.4byte \address
 	.endm
 
-	.macro object_event byte1, word1, byte2, byte3, byte4, byte5, byte6, byte7, byte8, byte9, byte10, byte11, byte12, byte13, byte14, script, word2, byte15, byte16
-	.byte \byte1
-	.2byte \word1
-	.byte \byte2, \byte3, \byte4, \byte5, \byte6, \byte7, \byte8, \byte9, \byte10, \byte11, \byte12, \byte13, \byte14
+	.macro object_event index, gfx, replacement, x, y, elevation, movement_type, x_radius, y_radius, trainer_type, sight_radius_tree_etc, script, event_flag
+	.byte \index, \gfx, \replacement, 0
+	.2byte \x
+	.2byte \y
+	.byte \elevation, \movement_type, ((\y_radius << 4) | \x_radius), 0
+    .2byte \trainer_type, \sight_radius_tree_etc
 	.4byte \script
-	.2byte \word2
-	.byte \byte15, \byte16
+	.2byte \event_flag
+	.2byte 0
 	inc _num_npcs
 	.endm
 
-	.macro warp_def x, y, byte, warp, map_id
+	.macro warp_def x, y, elevation, warp, map_id
 	.2byte \x, \y
-	.byte \byte, \warp
+	.byte \elevation, \warp
 	.byte \map_id & 0xFF  @ map num
 	.byte \map_id >> 8    @ map group
 	inc _num_warps
 	.endm
 
-	.macro coord_event x, y, byte1, byte2, word1, word2, word3, script
+	.macro coord_event x, y, elevation, trigger, index, script
 	.2byte \x, \y
-	.byte \byte1, \byte2
-	.2byte \word1, \word2, \word3
+	.byte \elevation, 0
+	.2byte \trigger, \index, 0
 	.4byte \script
 	inc _num_traps
 	.endm
 
-	.macro coord_weather_event x, y, height, weather
-	coord_event \x, \y, \height, 0, \weather, 0, 0, 0x0
+	.macro coord_weather_event x, y, elevation, weather
+	.2byte \x, \y
+	.byte \elevation, 0
+	.2byte \weather
+	.2byte 0, 0
+	.4byte 0
+	inc _num_traps
 	.endm
 
-	.macro bg_event x, y, byte, kind, word, arg6, arg7, arg8
+	.macro bg_event x, y, elevation, kind, arg6, arg7, arg8
 	.2byte \x, \y
-	.byte \byte, \kind
-	.2byte \word
+	.byte \elevation, \kind
+	.2byte 0
 	.if \kind < 5
 	.4byte \arg6
 	.else
@@ -58,11 +65,11 @@
 	.endm
 
 	.macro bg_hidden_item_event x, y, height, item, flag
-	bg_event \x, \y, \height, 7, 0, \item, ((\flag) - FLAG_HIDDEN_ITEMS_START), 0
+	bg_event \x, \y, \height, 7, \item, ((\flag) - FLAG_HIDDEN_ITEMS_START), 0
 	.endm
 
 	.macro bg_secret_base_event x, y, height, secret_base_id
-	bg_event \x, \y, \height, 8, 0, \secret_base_id, 0, 0
+	bg_event \x, \y, \height, 8, \secret_base_id, 0, 0
 	.endm	
 
 	.macro map_events npcs, warps, traps, signs

@@ -2,6 +2,7 @@
 #include "strings.h"
 
 #if ENGLISH
+
 // placeholder strings
 const u8 gExpandedPlaceholder_Empty[] = _("");
 const u8 gExpandedPlaceholder_Kun[] = _("");
@@ -159,7 +160,7 @@ const u8 OtherText_CheckTag[] = _("CHECK TAG");
 const u8 OtherText_Confirm[] = _("CONFIRM");
 const u8 gOtherText_Walk[] = _("WALK");
 
-const u8 gUnknownText_Exit[] = _("EXIT");
+const u8 gOtherText_Exit[] = _("EXIT");
 const u8 gOtherText_CancelNoTerminator[] = _("CANCEL");
 const u8 gOtherText_CancelWithTerminator[] = _("$CANCEL"); // with terminator at beginning?
 
@@ -180,7 +181,8 @@ const u8 gOtherText_OneDash[] = _("-");
 const u8 gOtherText_TwoDashes[] = _("--");
 const u8 gOtherText_ThreeDashes2[] = _("---");
 const u8 gOtherText_MaleSymbol2[] = _("♂");
-const u8 gOtherText_FemaleSymbolAndLv[] = _("♀$Lv.");
+const u8 gOtherText_FemaleSymbol2[] = _("♀");
+const u8 gOtherText_Lv[] = _("Lv.");
 const u8 gOtherText_TallPlusAndRightArrow[] = _("{TALL_PLUS}${RIGHT_ARROW}");
 const u8 gMenuText_GoBackToPrev[] = _("Go back to the\nprevious menu.");
 const u8 gOtherText_WhatWillYouDo[] = _("What would you like to do?");
@@ -926,6 +928,7 @@ const u8 gSystemText_SaveFailed[] = _("Save failed...");
 const u8 gSystemText_NoSaveFileNoTime[] = _("There is no save file, so the time\ncan’t be set.");
 const u8 gSystemText_ClockAdjustmentUsable[] = _("The in-game clock adjustment system\nis now useable.");
 const u8 gSystemText_Saving[] = _("SAVING...\nDON’T TURN OFF THE POWER.");
+
 #elif GERMAN
 
 // placeholder strings
@@ -1085,7 +1088,7 @@ const u8 OtherText_CheckTag[] = _("PRÜFEN");
 const u8 OtherText_Confirm[] = _("O.K.");
 const u8 gOtherText_Walk[] = _("LAUFEN");
 
-const u8 gUnknownText_Exit[] = _("BEENDEN");
+const u8 gOtherText_Exit[] = _("BEENDEN");
 const u8 gOtherText_CancelNoTerminator[] = _("ZURÜCK");
 const u8 gOtherText_CancelWithTerminator[] = _("$ZURÜCK");
 
@@ -1106,7 +1109,8 @@ const u8 gOtherText_OneDash[] = _("-");
 const u8 gOtherText_TwoDashes[] = _("--");
 const u8 gOtherText_ThreeDashes2[] = _("---");
 const u8 gOtherText_MaleSymbol2[] = _("♂");
-const u8 gOtherText_FemaleSymbolAndLv[] = _("♀$Lv.");
+const u8 gOtherText_FemaleSymbol2[] = _("♀");
+const u8 gOtherText_Lv[] = _("Lv.");
 const u8 gOtherText_TallPlusAndRightArrow[] = _("{TALL_PLUS}${RIGHT_ARROW}");
 const u8 gMenuText_GoBackToPrev[] = _("Kehre zurück zum\nvorherigen Menü.");
 const u8 gOtherText_WhatWillYouDo[] = _("Was möchtest du tun?");

@@ -1,14 +1,14 @@
 SkyPillar_5F:: @ 83076A0
-	.4byte SkyPillar_5F_MapAttributes
+	.4byte SkyPillar_5F_Layout
 	.4byte SkyPillar_5F_MapEvents
 	.4byte SkyPillar_5F_MapScripts
 	.4byte 0x0
-	.2byte BGM_TOZAN
+	.2byte MUS_TOZAN
 	.2byte 331
-	.byte 85
+	.byte MAPSEC_SKY_PILLAR
 	.byte 0
-	.byte 0
-	.byte 4
+	.byte WEATHER_NONE
+	.byte MAP_TYPE_UNDERGROUND
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

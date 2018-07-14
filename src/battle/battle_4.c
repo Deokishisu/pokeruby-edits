@@ -164,7 +164,6 @@ extern u16 gChosenMove; //last used move in battle
 extern u8 gBankInMenu;
 extern u8 gActionForBanks[4];
 extern u16 gUnknown_02024C2C[4]; //last used moves 2, used by sketch
-extern u16 gBattle_BG3_X;
 extern u16 gUnknown_02024C4C[4]; //last used moves by banks, another one
 extern u8 gCurrentTurnActionNumber;
 extern u16 gTrappingMoves[];
@@ -1991,7 +1990,7 @@ static void atk0B_healthbarupdate(void)
                 healthValue = currDmg;
             else
                 healthValue = maxPossibleDmgValue;
-            
+
             EmitHealthBarUpdate(0, healthValue);
             */
 
@@ -5544,6 +5543,7 @@ static void atk23_getexp(void)
                 gBattleResources_statsBeforeLvlUp->spDef = GetMonData(&gPlayerParty[gBattleStruct->expGetterID], MON_DATA_SPDEF);
                 
                 gActiveBattler = gBattleStruct->expGetterBank;
+
                 EmitExpBarUpdate(0, gBattleStruct->expGetterID, gBattleMoveDamage);
                 MarkBufferBankForExecution(gActiveBattler);
             }
@@ -9766,7 +9766,7 @@ static void atk5A_yesnoboxlearnmove(void)
             if (gBattleCommunication[1] == 0)
             {
                 sub_8023AD8();
-                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
                 gBattleStruct->atk5A_StateTracker++;
                 return;
             }
@@ -15770,8 +15770,8 @@ void atkEF_handleballthrow(void)
             }
             else
             {
-                if (gBattleResults.unk36[gLastUsedItem - ITEM_ULTRA_BALL] < 0xFF)
-                    gBattleResults.unk36[gLastUsedItem - ITEM_ULTRA_BALL]++;
+                if (gBattleResults.usedBalls[gLastUsedItem - ITEM_ULTRA_BALL] < 0xFF)
+                    gBattleResults.usedBalls[gLastUsedItem - ITEM_ULTRA_BALL]++;
             }
         }
         if (odds > 254) //poke caught
@@ -15845,7 +15845,7 @@ static void atkF2_displaydexinfo(void)
     switch (gBattleCommunication[0])
     {
     case 0:
-        BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         gBattleCommunication[0]++;
         break;
     case 1:
@@ -15863,7 +15863,7 @@ static void atkF2_displaydexinfo(void)
             LoadCompressedPalette(gBattleTerrainPalette_BattleTower, 0x20, 0x60);
             REG_BG3CNT = 0x5a0b;
             gBattle_BG3_X = 0x100;
-            BeginNormalPaletteFade(0xfffc, 0, 0x10, 0, 0);
+            BeginNormalPaletteFade(0xFFFC, 0, 16, 0, RGB(0, 0, 0));
             gBattleCommunication[0]++;
         }
         break;

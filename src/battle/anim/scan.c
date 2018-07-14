@@ -77,7 +77,7 @@ static void sub_80CD408(struct Sprite* sprite)
         sprite->data[0] = 8;
         sprite->data[2] = sprite->pos1.x + gUnknown_083D6DDC[sprite->data[5] >> 8][0];
         sprite->data[4] = sprite->pos1.y + gUnknown_083D6DDC[sprite->data[5] >> 8][1];
-        sprite->callback = StartTranslateAnimSpriteByDeltas;
+        sprite->callback = StartAnimLinearTranslation;
         StoreSpriteCallbackInData(sprite, sub_80CD4B8);
         sprite->data[5] += 0x100;
         PlaySE12WithPanning(0xD2, BattleAnimAdjustPanning(0x3F));
@@ -142,7 +142,7 @@ static void sub_80CD4EC(struct Sprite* sprite)
         sprite->data[0] = 6;
         sprite->data[2] = GetBattlerSpriteCoord(gAnimBankTarget, 2) + a;
         sprite->data[4] = GetBattlerSpriteCoord(gAnimBankTarget, 3) + b;
-        sprite->callback = StartTranslateAnimSpriteByDeltas;
+        sprite->callback = StartAnimLinearTranslation;
         StoreSpriteCallbackInData(sprite, sub_80CD654);
     }
 }
@@ -159,7 +159,7 @@ static void sub_80CD5A8(struct Sprite* sprite)
         sprite->data[1] = 0;
     }
 
-    BlendPalettes(sub_80791A8(1, 1, 1, 1, 1, 0, 0), sprite->data[1], 0x7FFF);
+    BlendPalettes(sub_80791A8(1, 1, 1, 1, 1, 0, 0), sprite->data[1], RGB(31, 31, 31));
     if (sprite->data[1] == 16)
     {
         int pal;

@@ -618,7 +618,7 @@ const struct WindowTemplate gWindowTemplate_81E6CC8 =
     BG_SCREEN_ADDR(15), // tilemap
 };
 
-const struct WindowTemplate gWindowTemplate_81E6CE4 =
+const struct WindowTemplate gMenuTextWindowTemplate =
 {
     0, // BG number
     2, // BG character base block
@@ -1647,7 +1647,7 @@ const struct WindowTemplate gWindowTemplate_81E7224 =
     BG_SCREEN_ADDR(31), // tilemap
 };
 
-const struct WindowTemplate gWindowTemplate_81E7240 =
+const struct WindowTemplate gMoveTutorMenuFramesWindowTemplate =
 {
     1, // BG number
     2, // BG character base block
@@ -2003,7 +2003,7 @@ void Text_InitWindow8002E4C(struct Window *win, const u8 *text, u16 tileDataStar
     if (a6)
         val = 255;
     win->win_field_F = val;
-    if (val)
+    if (win->win_field_F)
         ClipLeft(win);
 }
 
@@ -3394,7 +3394,7 @@ static u16 GetBlankTileNum(struct Window *win)
     return retVal;
 }
 
-static s32 sub_80048D8(struct Window *win, u8 x, u8 y)
+static s32 Window_MoveCursor(struct Window *win, u8 x, u8 y)
 {
     win->cursorX = x;
     win->cursorY = y & 0xF8;
@@ -3458,7 +3458,7 @@ u8 *AlignInt1(struct Window *win, u8 *dest, s32 value, u8 alignAmount, u8 alignT
     case 0:
         ConvertIntToDecimalString(temp, value);
         dest = StringCopy(dest, temp);
-        dest[0] = 0xFC;
+        dest[0] = EXT_CTRL_CODE_BEGIN;
         dest[1] = 19;
         dest[2] = alignAmount;
         dest += 3;
@@ -3469,7 +3469,7 @@ u8 *AlignInt1(struct Window *win, u8 *dest, s32 value, u8 alignAmount, u8 alignT
         width = GetStringWidth(win, temp);
         if (alignAmount > width)
         {
-            dest[0] = 0xFC;
+            dest[0] = EXT_CTRL_CODE_BEGIN;
             dest[1] = 19;
             dest[2] = alignAmount - width;
             dest += 3;
@@ -3481,7 +3481,7 @@ u8 *AlignInt1(struct Window *win, u8 *dest, s32 value, u8 alignAmount, u8 alignT
         width = GetStringWidth(win, temp);
         if (alignAmount > width)
         {
-            dest[0] = 0xFC;
+            dest[0] = EXT_CTRL_CODE_BEGIN;
             dest[1] = 19;
             dest[2] = (alignAmount - width) / 2;
             dest += 3;
@@ -3489,7 +3489,7 @@ u8 *AlignInt1(struct Window *win, u8 *dest, s32 value, u8 alignAmount, u8 alignT
         dest = StringCopy(dest, temp);
         if (alignAmount > width)
         {
-            dest[0] = 0xFC;
+            dest[0] = EXT_CTRL_CODE_BEGIN;
             dest[1] = 19;
             dest[2] = alignAmount;
             dest += 3;
@@ -3672,25 +3672,26 @@ u8 Text_InitWindow8004D04(struct Window *win, const u8 *text, u16 tileDataStartO
     return Text_PrintWindow8002F44(win);
 }
 
-u8 Text_InitWindow8004D38(struct Window *win, const u8 *text, u16 tileDataStartOffset, u8 left, u8 top)
+u8 Text_InitWindow_RightAligned(struct Window *win, const u8 *text, u16 tileDataStartOffset, u8 right, u8 top)
 {
     u8 width = GetStringWidth(win, text);
-    Text_InitWindow(win, text, tileDataStartOffset, left - ((u32)(width + 7) >> 3), top);
+    Text_InitWindow(win, text, tileDataStartOffset, right - ((u32)(width + 7) >> 3), top);
     EraseAtCursor(win);
     width &= 7;
     if (width)
         width = 8 - width;
-    sub_80048D8(win, width, 0);
+    Window_MoveCursor(win, width, 0);
     return Text_PrintWindow8002F44(win);
 }
 
-u8 Text_InitWindow8004DB0(struct Window *win, const u8 *text, u16 tileDataStartOffset, u8 left, u8 top, u16 a6)
+u8 Text_InitWindow_Centered(struct Window *win, const u8 *text, u16 tileDataStartOffset, u8 left, u8 top, u16 width)
 {
-    register u32 val asm("r5") = (u8)((a6 >> 1) - (GetStringWidth(win, text) >> 1));
-    left += (val >> 3);
+    width = (u8)(width / 2 - GetStringWidth(win, text) / 2);
+    left += (u8)width / 8;
     Text_InitWindow(win, text, tileDataStartOffset, left, top);
     EraseAtCursor(win);
-    sub_80048D8(win, val & 7, 0);
+    width &= 7;
+    Window_MoveCursor(win, width, 0);
     return Text_PrintWindow8002F44(win);
 }
 

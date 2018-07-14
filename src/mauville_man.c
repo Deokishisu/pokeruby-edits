@@ -10,7 +10,7 @@
 #include "overworld.h"
 #include "random.h"
 #include "script.h"
-#include "constants/map_objects.h"
+#include "constants/event_objects.h"
 #include "constants/songs.h"
 #include "sound.h"
 #include "string_util.h"
@@ -689,7 +689,7 @@ static void Task_BardSong(u8 taskId)
     {
     case 0:  // Initialize song
         PrepareSongText();
-        Text_InitWindowWithTemplate(gMenuWindowPtr, &gWindowTemplate_81E6CE4);
+        Text_InitWindowWithTemplate(gMenuWindowPtr, &gMenuTextWindowTemplate);
         Text_InitWindow8002EB0(gMenuWindowPtr, gStringVar4, 2, 4, 15);
         task->data[1] = 0;
         task->data[2] = 0;
@@ -745,7 +745,7 @@ static void Task_BardSong(u8 taskId)
     case 3:
         if (gStringVar4[task->tCharIndex] == EOS)
         {
-            FadeInNewBGM(BGM_POKECEN, 6);
+            FadeInNewBGM(MUS_POKECEN, 6);
             m4aMPlayFadeOutTemporarily(&gMPlay_SE2, 2);
             EnableBothScriptContexts();
             DestroyTask(taskId);
@@ -806,7 +806,7 @@ static void Task_BardSong(u8 taskId)
 
 void sub_80F83D0(void)
 {
-    VarSet(VAR_OBJ_GFX_ID_0, MAP_OBJ_GFX_BARD + GetCurrentMauvilleOldMan());
+    VarSet(VAR_OBJ_GFX_ID_0, EVENT_OBJ_GFX_BARD + GetCurrentMauvilleOldMan());
 }
 
 struct Story

@@ -402,13 +402,13 @@ void sub_80DFFD0(struct Sprite *sprite)
     sprite->data[4] = sprite->pos1.y + 12;
     sprite->data[5] = -12;
 
-    InitAnimSpriteTranslationOverDuration(sprite);
+    InitAnimArcTranslation(sprite);
     sprite->callback = sub_80E00D0;
 }
 
 static void sub_80E00D0(struct Sprite *sprite)
 {
-    if (TranslateAnimSpriteLinearAndSine(sprite))
+    if (TranslateAnimArc(sprite))
         move_anim_8074EE0(sprite);
 }
 
@@ -1024,7 +1024,7 @@ void sub_80E0A4C(u8 taskId)
 
     if (IsContest())
     {
-        species = EWRAM_19348;
+        species = EWRAM_19348[0];
     }
     else
     {

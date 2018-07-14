@@ -753,8 +753,8 @@ static void InitializeCursorPosition(void)
     case 5:
         gRegionMap->mapSectionId = gMapHeader.regionMapSectionId;
         gRegionMap->playerIsInCave = FALSE;
-        mapWidth = gMapHeader.mapData->width;
-        mapHeight = gMapHeader.mapData->height;
+        mapWidth = gMapHeader.mapLayout->width;
+        mapHeight = gMapHeader.mapLayout->height;
         x = gSaveBlock1.pos.x;
         y = gSaveBlock1.pos.y;
         if (gRegionMap->mapSectionId == MAPSEC_UNDERWATER_128)
@@ -765,8 +765,8 @@ static void InitializeCursorPosition(void)
         mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1.warp4.mapGroup, gSaveBlock1.warp4.mapNum);
         gRegionMap->mapSectionId = mapHeader->regionMapSectionId;
         gRegionMap->playerIsInCave = TRUE;
-        mapWidth = mapHeader->mapData->width;
-        mapHeight = mapHeader->mapData->height;
+        mapWidth = mapHeader->mapLayout->width;
+        mapHeight = mapHeader->mapLayout->height;
         x = gSaveBlock1.warp4.x;
         y = gSaveBlock1.warp4.y;
         break;
@@ -774,8 +774,8 @@ static void InitializeCursorPosition(void)
         mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1.warp2.mapGroup, gSaveBlock1.warp2.mapNum);
         gRegionMap->mapSectionId = mapHeader->regionMapSectionId;
         gRegionMap->playerIsInCave = TRUE;
-        mapWidth = mapHeader->mapData->width;
-        mapHeight = mapHeader->mapData->height;
+        mapWidth = mapHeader->mapLayout->width;
+        mapHeight = mapHeader->mapLayout->height;
         x = gSaveBlock1.warp2.x;
         y = gSaveBlock1.warp2.y;
         break;
@@ -796,8 +796,8 @@ static void InitializeCursorPosition(void)
                 gRegionMap->mapSectionId = mapHeader->regionMapSectionId;
             }
             gRegionMap->playerIsInCave = FALSE;
-            mapWidth = mapHeader->mapData->width;
-            mapHeight = mapHeader->mapData->height;
+            mapWidth = mapHeader->mapLayout->width;
+            mapHeight = mapHeader->mapLayout->height;
             x = r4->x;
             y = r4->y;
         }
@@ -883,14 +883,14 @@ static void sub_80FB600(void)
             u16 r1;
 
             gRegionMap->mapSectionId = mapHeader->regionMapSectionId;
-            r1 = mapHeader->mapData->width / gRegionMapLocations[gRegionMap->mapSectionId].width;
+            r1 = mapHeader->mapLayout->width / gRegionMapLocations[gRegionMap->mapSectionId].width;
             if (r1 == 0)
                 r1 = 1;
             x = sp2 / r1;
             if (x >= gRegionMapLocations[gRegionMap->mapSectionId].width)
                 x = gRegionMapLocations[gRegionMap->mapSectionId].width - 1;
 
-            r1 = mapHeader->mapData->height / gRegionMapLocations[gRegionMap->mapSectionId].height;
+            r1 = mapHeader->mapLayout->height / gRegionMapLocations[gRegionMap->mapSectionId].height;
             if (r1 == 0)
                 r1 = 1;
             y = sp4 / r1;
@@ -1600,7 +1600,7 @@ void CB2_InitFlyRegionMap(void)
         CreateFlyTargetGraphics();
         break;
     case 8:
-        BlendPalettes(0xFFFFFFFF, 16, 0);
+        BlendPalettes(0xFFFFFFFF, 16, RGB(0, 0, 0));
         SetVBlankCallback(VBlankCB_FlyRegionMap);
         break;
     case 9:
@@ -1784,7 +1784,7 @@ static void sub_80FC5B4(void)
     switch (sFlyDataPtr->unk4)
     {
     case 0:
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
         sFlyDataPtr->unk4++;
         break;
     case 1:
@@ -1830,7 +1830,7 @@ void sub_80FC69C(void)
     switch (sFlyDataPtr->unk4)
     {
     case 0:
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         sFlyDataPtr->unk4++;
         break;
     case 1:
@@ -1908,7 +1908,7 @@ void debug_sub_8110D84(void)
     switch (sFlyDataPtr->unk4)
     {
     case 0:
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
         sFlyDataPtr->unk4++;
         break;
     case 1:
@@ -1933,7 +1933,7 @@ void debug_sub_8110D84(void)
             break;
         case 5:
             m4aSongNumStart(SE_SELECT);
-            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
             sFlyDataPtr->unk4++;
             break;
         }

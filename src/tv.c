@@ -1,6 +1,7 @@
 #include "global.h"
 #include "tv.h"
 #include "battle_tower.h"
+#include "contest.h"
 #include "contest_painting.h"
 #include "data2.h"
 #include "easy_chat.h"
@@ -68,11 +69,9 @@ struct UnkTvStruct gUnknown_03005D38;
 
 extern u16 gSpecialVar_LastTalked;
 
-extern u8 gSpecialVar_ContestCategory;
-extern u8 gSpecialVar_ContestRank;
-extern u8 gUnknown_03004316[11];
+extern u16 gSpecialVar_ContestCategory;
+extern u16 gSpecialVar_ContestRank;
 extern u8 gBattleOutcome;
-
 extern u16 gLastUsedItem;
 
 static EWRAM_DATA u16 gUnknown_020387E0 = 0;
@@ -445,10 +444,6 @@ void ClearTVShowData(void)
 
 bool8 sub_80BF1B4(u8);
 void sub_80BF20C(void);
-extern u8 gSpecialVar_ContestCategory;
-extern u8 gSpecialVar_ContestRank;
-extern u8 gUnknown_03004316[11];
-extern u8 gBattleOutcome;
 
 void InterviewBefore_FanClubLetter(void);
 void InterviewBefore_RecentHappenings(void);
@@ -458,21 +453,9 @@ void InterviewBefore_NameRater(void);
 void InterviewBefore_BravoTrainerPkmnProfile(void);
 void InterviewBefore_BravoTrainerBTProfile(void);
 
-void sub_80BE028(void);
-void sub_80BE074(void);
-void sub_80BE778(void);
-void sub_80BEB20(void);
 
 u8 GetTVChannelByShowType(u8);
 
-s8 sub_80BF74C(TVShow tvShow[]);
-
-void sub_80BF55C(TVShow tvShow[], u8 showidx);
-void sub_80BEA88(void);
-
-void sub_80BE138(TVShow *show);
-void sub_80BE160(TVShow *show);
-extern u16 gLastUsedItem;
 
 void InterviewAfter_FanClubLetter(void);
 void InterviewAfter_RecentHappenings(void);
@@ -667,7 +650,7 @@ void GabbyAndTyBeforeInterview(void)
     {
         for (i=0; i<11; i++)
         {
-            if (gBattleResults.unk36[i] != 0)
+            if (gBattleResults.usedBalls[i] != 0)
             {
                 gSaveBlock1.gabbyAndTyData.valA_3 = 1;
                 break;
@@ -736,7 +719,7 @@ u8 GabbyAndTyGetLastBattleTrivia(void)
     return 0;
 }
 
-void GabbyAndTySetScriptVarsToFieldObjectLocalIds(void)
+void GabbyAndTySetScriptVarsToEventObjectLocalIds(void)
 {
     switch (GabbyAndTyGetBattleNum())
     {
@@ -832,7 +815,7 @@ void PutPokemonTodayCaughtOnAir(void)
             if (gUnknown_03005D38.var0 != -1 && sub_80BF1B4(TVSHOW_POKEMON_TODAY_CAUGHT) != 1)
             {
                 for (i = 0; i < 11; i++)
-                    total += gBattleResults.unk36[i];
+                    total += gBattleResults.usedBalls[i];
                 if (total != 0 || gBattleResults.unk5_1 != 0)
                 {
                     struct TVShowPokemonToday *pokemonToday;
@@ -849,7 +832,7 @@ void PutPokemonTodayCaughtOnAir(void)
                     else
                     {
                         for (i = 0; i < 11; i++)
-                            total += gBattleResults.unk36[i];
+                            total += gBattleResults.usedBalls[i];
                         if (total > 0xff)
                             total = 0xff;
                         item = gLastUsedItem;
@@ -893,8 +876,8 @@ void sub_80BE074(void)
 
     if (sub_80BF77C(0xffff) == 0)
     {
-        for (i = 0, total = 0; i < ARRAY_COUNT(gUnknown_03004316); i++)
-            total += gUnknown_03004316[i];
+        for (i = 0, total = 0; i < 11; i++)
+            total += gBattleResults.usedBalls[i];
         if (total > 0xff)
             total = 0xff;
         if (total > 2 && gBattleOutcome == 1)
@@ -982,16 +965,16 @@ void sub_80BE23C(u16 a0)
     }
 }
 
-void sub_80BE284(u8 a0)
+void sub_80BE284(u8 contestResult)
 {
     struct TVShowBravoTrainerPokemonProfiles *bravoTrainer = &gSaveBlock1.tvShows[24].bravoTrainer;
 
     gUnknown_03005D38.var0 = sub_80BF720(gSaveBlock1.tvShows);
     if (gUnknown_03005D38.var0 != -1)
     {
-        bravoTrainer->contestResult = a0;
+        bravoTrainer->contestResult = contestResult;
         bravoTrainer->contestCategory = gSpecialVar_ContestCategory;
-        bravoTrainer->contestRank = gSpecialVar_ContestRank;
+        bravoTrainer->contestRank = (u8)gSpecialVar_ContestRank;
         bravoTrainer->species = GetMonData(&gPlayerParty[gUnknown_02038694], MON_DATA_SPECIES, NULL);
         GetMonData(&gPlayerParty[gUnknown_02038694], MON_DATA_NICKNAME, bravoTrainer->pokemonNickname);
     }
@@ -2201,7 +2184,7 @@ void GetMomOrDadStringForTVMessage(void)
 void sub_80BFD20(void)
 {
     VarSet(VAR_BRAVO_TRAINER_BATTLE_TOWER_ON, 0);
-    RemoveFieldObjectByLocalIdAndMap(5, gSaveBlock1.location.mapNum, gSaveBlock1.location.mapGroup);
+    RemoveEventObjectByLocalIdAndMap(5, gSaveBlock1.location.mapNum, gSaveBlock1.location.mapGroup);
 }
 
 typedef union ewramStruct_02007000
