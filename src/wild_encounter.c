@@ -3725,9 +3725,9 @@ static u16 GetRoute119WaterTileNum(s16 x, s16 y, u8 section)
 
     for (yCur = yMin; yCur <= yMax; yCur++)
     {
-        for (xCur = 0; xCur < gMapHeader.mapData->width; xCur++)
+        for (xCur = 0; xCur < gMapHeader.mapLayout->width; xCur++)
         {
-            if (sub_805759C(MapGridGetMetatileBehaviorAt(xCur + 7, yCur + 7)) == TRUE)
+            if (MetatileBehavior_IsFeebasEncounterable(MapGridGetMetatileBehaviorAt(xCur + 7, yCur + 7)) == TRUE)
             {
                 tileNum++;
                 if (x == xCur && y == yCur)
@@ -4105,7 +4105,7 @@ static bool8 DoGlobalWildEncounterDiceRoll(void)
         return TRUE;
 }
 
-bool8 StandardWildEncounter(u16 a, u16 b)
+bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
 {
     u16 headerNum;
     struct Roamer *roamer;
@@ -4117,11 +4117,11 @@ bool8 StandardWildEncounter(u16 a, u16 b)
         headerNum = GetCurrentMapWildMonHeader();
         if (headerNum != 0xFFFF)
         {
-            if (MetatileBehavior_IsLandWildEncounter(a) == TRUE)
+            if (MetatileBehavior_IsLandWildEncounter(curMetatileBehavior) == TRUE)
             {
                 if (gWildMonHeaders[headerNum].landMonsInfo)
                 {
-                    if (b != a && !DoGlobalWildEncounterDiceRoll())
+                    if (prevMetatileBehavior != curMetatileBehavior && !DoGlobalWildEncounterDiceRoll())
                         return 0;
 
                     if (DoWildEncounterTest(gWildMonHeaders[headerNum].landMonsInfo->encounterRate, 0) == TRUE)
@@ -4150,12 +4150,12 @@ bool8 StandardWildEncounter(u16 a, u16 b)
                     }
                 }
             }
-            else if (MetatileBehavior_IsWaterWildEncounter(a) == TRUE
-             || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && MetatileBehavior_IsBridge(a) == TRUE))
+            else if (MetatileBehavior_IsWaterWildEncounter(curMetatileBehavior) == TRUE
+             || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && MetatileBehavior_IsBridge(curMetatileBehavior) == TRUE))
             {
                 if (gWildMonHeaders[headerNum].waterMonsInfo)
                 {
-                    if (b != a && !DoGlobalWildEncounterDiceRoll())
+                    if (prevMetatileBehavior != curMetatileBehavior && !DoGlobalWildEncounterDiceRoll())
                         return 0;
 
                     if (DoWildEncounterTest(gWildMonHeaders[headerNum].waterMonsInfo->encounterRate, 0) == TRUE)

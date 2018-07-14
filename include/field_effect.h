@@ -88,11 +88,11 @@ bool8 sub_8086E50(struct Task *);
 bool8 sub_8086EB0(struct Task *);
 bool8 sub_8086ED4(struct Task *);
 
-bool8 sub_8086FB0(struct Task *, struct MapObject *);
-bool8 waterfall_1_do_anim_probably(struct Task *, struct MapObject *);
-bool8 waterfall_2_wait_anim_finish_probably(struct Task *, struct MapObject *);
-bool8 sub_8087030(struct Task *, struct MapObject *);
-bool8 sub_8087058(struct Task *, struct MapObject *);
+bool8 sub_8086FB0(struct Task *, struct EventObject *);
+bool8 waterfall_1_do_anim_probably(struct Task *, struct EventObject *);
+bool8 waterfall_2_wait_anim_finish_probably(struct Task *, struct EventObject *);
+bool8 sub_8087030(struct Task *, struct EventObject *);
+bool8 sub_8087058(struct Task *, struct EventObject *);
 
 bool8 sub_8087124(struct Task *);
 bool8 dive_2_unknown(struct Task *);
@@ -100,28 +100,25 @@ bool8 dive_3_unknown(struct Task *);
 
 void sub_80871B8(u8);
 
-bool8 sub_808722C(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_8087264(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_8087298(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_80872E4(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_80873D8(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_80873F4(struct Task *, struct MapObject *, struct Sprite *);
+bool8 sub_808722C(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_8087264(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_8087298(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_80872E4(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_80873D8(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_80873F4(struct Task *, struct EventObject *, struct Sprite *);
 
-bool8 sub_80874CC(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_80874FC(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_8087548(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_808759C(struct Task *, struct MapObject *, struct Sprite *);
+bool8 sub_80874CC(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_80874FC(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_8087548(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_808759C(struct Task *, struct EventObject *, struct Sprite *);
 
 void sub_8087654(u8);
 
-bool8 sub_80876C8(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_80876F8(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_8087774(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_80877AC(struct Task *, struct MapObject *, struct Sprite *);
-bool8 sub_80877D4(struct Task *, struct MapObject *, struct Sprite *);
-
-void sub_80878F4(struct Task *);
-void sub_8087914(struct Task *);
+bool8 sub_80876C8(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_80876F8(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_8087774(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_80877AC(struct Task *, struct EventObject *, struct Sprite *);
+bool8 sub_80877D4(struct Task *, struct EventObject *, struct Sprite *);
 
 void sub_8087AA4(struct Task *);
 void sub_8087AC8(struct Task *);
@@ -176,7 +173,7 @@ u8 CreateBirchSprite(s16 x, s16 y, u8 subpriority);
 u8 CreateMonSprite_PicBox(u16, s16, s16, u8);
 void FreeResourcesAndDestroySprite(struct Sprite *sprite);
 void MultiplyInvertedPaletteRGBComponents(u16, u8, u8, u8);
-void sub_80878A8(void);
+void StartEscapeRopeFieldEffect(void);
 void CreateTeleportFieldEffectTask(void);
 void MultiplyPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b);
 

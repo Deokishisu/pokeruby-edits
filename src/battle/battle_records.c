@@ -14,7 +14,7 @@ struct DebugStruct1
     u8 var1[10];
 };
 
-extern struct LinkPlayerMapObject gLinkPlayerMapObjects[4];
+extern struct LinkPlayerEventObject gLinkPlayerEventObjects[4];
 extern u8 gBattleOutcome;
 
 #if DEBUG
@@ -220,7 +220,7 @@ void UpdateLinkBattleRecords(int id)
         gTrainerCards[id].playerName,
         gTrainerCards[id].trainerId,
         gBattleOutcome,
-        gLinkPlayers[gLinkPlayerMapObjects[id].linkPlayerId].language);
+        gLinkPlayers[gLinkPlayerEventObjects[id].linkPlayerId].language);
 }
 
 #if DEBUG
@@ -238,7 +238,7 @@ void debug_sub_81257E0(void)
             gUnknown_Debug_4245CC[id].var1,
             gUnknown_Debug_4245CC[id].var0,
             gUnknown_Debug_8424620[i].unk1,
-            gLinkPlayers[gLinkPlayerMapObjects[id].linkPlayerId].language);
+            gLinkPlayers[gLinkPlayerEventObjects[id].linkPlayerId].language);
     }
 }
 #endif
@@ -290,7 +290,7 @@ void ShowLinkBattleRecords(void)
 {
     s32 i;
     Menu_DrawStdWindowFrame(1, 0, 28, 18);
-    sub_8072BD8(gOtherText_BattleResults, 0, 1, 240);
+    MenuPrint_Centered(gOtherText_BattleResults, 0, 1, 240);
 
     PrintLinkBattleWinsLossesDraws(gSaveBlock1.linkBattleRecords);
 #if ENGLISH
@@ -335,7 +335,7 @@ static void PrintWinStreak(const u8 *str, u16 streak, u8 left, u8 top)
     Menu_PrintText(str, left, top);
     if (streak > 9999)
         streak = 9999;
-    sub_8072C14(gStringVar1, streak, 24, 1);
+    AlignInt1InMenuWindow(gStringVar1, streak, 24, 1);
     Menu_PrintText(gOtherText_WinStreak, left + 7, top);
 }
 
@@ -368,7 +368,7 @@ void ShowBattleTowerRecords(void)
 {
     u16 i;
     Menu_DrawStdWindowFrame(3, 1, 27, 17);
-    sub_8072BD8(gOtherText_BattleTowerResults, 3, 2, 0xC8);
+    MenuPrint_Centered(gOtherText_BattleTowerResults, 3, 2, 0xC8);
     Menu_PrintText(gOtherText_Lv50, 5, 6);
     Menu_PrintText(gOtherText_Lv100, 5, 12);
     for (i = 5; i < 26; i++)

@@ -1,5 +1,6 @@
 #include "global.h"
 #include "matsuda_debug_menu.h"
+#include "battle.h"
 #include "contest.h"
 #include "contest_link_80C2020.h"
 #include "contest_link_80C857C.h"
@@ -21,15 +22,6 @@ extern u8 gUnknown_0203856C;
 extern u8 gUnknown_02038694;
 extern u16 gSpecialVar_ContestCategory;
 extern u16 gSpecialVar_ContestRank;
-
-extern u16 gBattle_BG0_X;
-extern u16 gBattle_BG0_Y;
-extern u16 gBattle_BG1_X;
-extern u16 gBattle_BG1_Y;
-extern u16 gBattle_BG2_X;
-extern u16 gBattle_BG2_Y;
-extern u16 gBattle_BG3_X;
-extern u16 gBattle_BG3_Y;
 
 extern u8 (*gMenuCallback)(void);
 
@@ -105,7 +97,7 @@ static bool8 sub_80A9B78(void)
 
 u8 MatsudaDebugMenu_ContestResults(void)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     CreateTask(sub_80A9BE4, 0xFF);
     return 1;
 }
@@ -878,7 +870,7 @@ void sub_80AAD08(struct Sprite *sprite, s8 var2)
     {
         eMatsudaDebugVar = sprite->data[3];
         SetMainCallback2(sub_80AACC4);
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 0x10, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     }
 }
 

@@ -150,7 +150,7 @@ extern const u8 OtherText_CheckTag[];
 extern const u8 OtherText_Confirm[];
 extern const u8 gOtherText_Walk[];
 
-extern const u8 gUnknownText_Exit[];
+extern const u8 gOtherText_Exit[];
 extern const u8 gOtherText_CancelNoTerminator[];
 extern const u8 gOtherText_CancelWithTerminator[];
 
@@ -171,7 +171,8 @@ extern const u8 gOtherText_OneDash[];
 extern const u8 gOtherText_TwoDashes[];
 extern const u8 gOtherText_ThreeDashes2[];
 extern const u8 gOtherText_MaleSymbol2[];
-extern const u8 gOtherText_FemaleSymbolAndLv[];
+extern const u8 gOtherText_FemaleSymbol2[];
+extern const u8 gOtherText_Lv[];
 extern const u8 gOtherText_TallPlusAndRightArrow[];
 extern const u8 gMenuText_GoBackToPrev[];
 extern const u8 gOtherText_WhatWillYouDo[];

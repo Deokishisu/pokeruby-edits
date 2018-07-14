@@ -55,12 +55,12 @@ void CB2_FieldInitRegionMap(void)
     Menu_EraseScreen();
     REG_BG0CNT = BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(31) | BGCNT_16COLOR | BGCNT_TXT256x256;
     Menu_DrawStdWindowFrame(21, 0, 29, 3);
-    sub_8072BD8(gOtherText_Hoenn, 0x16, 1, 0x38);
+    MenuPrint_Centered(gOtherText_Hoenn, 0x16, 1, 0x38);
     Menu_DrawStdWindowFrame(16, 16, 29, 19);
     sub_813F0C8();
     SetMainCallback2(CB2_FieldRegionMap);
     SetVBlankCallback(VBlankCB_FieldRegionMap);
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0x10, 0, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
 }
 
 void VBlankCB_FieldRegionMap(void)
@@ -102,7 +102,7 @@ void sub_813EFDC(void)
         }
         break;
     case 3:
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 0x10, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         ewram0_5.unk888++;
         break;
     case 4:

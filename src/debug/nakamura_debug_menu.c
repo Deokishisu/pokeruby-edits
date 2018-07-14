@@ -133,7 +133,7 @@ static bool8 SwitchToPkmnListMenu(void)
     Menu_EraseScreen();
     gMain.savedCallback = c2_exit_to_overworld_1_sub_8080DEC;
     CreateTask(Task_SwitchToPkmnListMenu, 0);
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     return TRUE;
 }
 
@@ -752,16 +752,16 @@ static const u8 Str_843E58D[] = _(
 static u16 FishingPoints_CountFishingTilesInMapThird(u8 a0)
 {
     u16 retval = 0;
-    u16 height = gMapHeader.mapData->height / 3;
+    u16 height = gMapHeader.mapLayout->height / 3;
     u16 y;
     u16 x;
     u16 start = height * a0;
 
     for (y = start; y < start + height; y++)
     {
-        for (x = 0; x < gMapHeader.mapData->width; x++)
+        for (x = 0; x < gMapHeader.mapLayout->width; x++)
         {
-            if (sub_805759C(MapGridGetMetatileBehaviorAt(x + 7, y + 7)) == TRUE)
+            if (MetatileBehavior_IsFeebasEncounterable(MapGridGetMetatileBehaviorAt(x + 7, y + 7)) == TRUE)
             {
                 retval++;
             }
@@ -783,11 +783,11 @@ static u16 FishingPoints_GetIndexOfCurrentFishingSpot(void)
     x -= 7;
     y -= 7;
 
-    for (yy = 0; yy < gMapHeader.mapData->height; yy++)
+    for (yy = 0; yy < gMapHeader.mapLayout->height; yy++)
     {
-        for (xx = 0; xx < gMapHeader.mapData->width; xx++)
+        for (xx = 0; xx < gMapHeader.mapLayout->width; xx++)
         {
-            if (sub_805759C(MapGridGetMetatileBehaviorAt(xx + 7, yy + 7)) == TRUE)
+            if (MetatileBehavior_IsFeebasEncounterable(MapGridGetMetatileBehaviorAt(xx + 7, yy + 7)) == TRUE)
             {
                 retval++;
                 if (x == xx && y == yy)
@@ -921,7 +921,7 @@ static void NakaGenderTest_PrintSpeciesGender(u8 i)
     if (gender == MON_MALE)
         Menu_PrintText(gOtherText_MaleSymbol2, 23, 2 * i + 1);
     else if (gender == MON_FEMALE)
-        Menu_PrintText(gOtherText_FemaleSymbolAndLv, 23, 2 * i + 1);
+        Menu_PrintText(gOtherText_FemaleSymbol2, 23, 2 * i + 1);
     else
         Menu_PrintText(sp0, 23, 2 * i + 1);
 }

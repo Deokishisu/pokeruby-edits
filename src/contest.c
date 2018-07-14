@@ -1,6 +1,6 @@
 #include "global.h"
 #include "constants/items.h"
-#include "constants/map_objects.h"
+#include "constants/event_objects.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/species.h"
@@ -48,23 +48,10 @@ extern u8 gBankAttacker;
 extern u8 gBankTarget;
 extern u8 gBanksBySide[];
 extern u8 gBankSpriteIds[];
-extern u16 gBattle_BG3_X;
-extern s16 gBattle_BG1_Y;
-extern u16 gBattle_BG3_Y;
-extern u16 gBattle_WIN1H;
 extern struct Window gUnknown_03004210;
-extern u16 gBattle_WIN0V;
-extern u16 gBattle_WIN1V;
-extern u16 gBattle_BG2_Y;
-extern u16 gBattle_BG2_X;
-extern u16 gBattle_BG0_Y;
-extern u16 gBattle_BG0_X;
-extern u16 gBattle_BG1_X;
-extern u16 gBattle_WIN0H;
+extern u32 gContestRngValue;
 
 extern struct SpriteTemplate gUnknown_02024E8C;
-
-
 extern const struct ContestPokemon gContestOpponents[60];
 extern const u8 gUnknown_083CA308[][2];
 extern const u8 gUnknown_083CA310[][2];
@@ -583,8 +570,7 @@ void sub_80AB9A0(u8 taskId)
         gTasks[taskId].data[0]++;
         break;
     case 1:
-        gBattle_BG1_Y += 7;
-        if (gBattle_BG1_Y <= 160)
+        if ((s16)(gBattle_BG1_Y += 7) <= 160)
             break;
         gTasks[taskId].data[0]++;
         break;
@@ -1584,7 +1570,7 @@ void sub_80AC2CC(u8 taskId)
         {
         case 0:
             sub_80B1EA8(-1, 1);
-            PlayFanfare(BGM_ME_ZANNEN);
+            PlayFanfare(MUS_ME_ZANNEN);
             gTasks[taskId].data[10]++;
             break;
         case 1:
@@ -2021,10 +2007,9 @@ void sub_80ADE54(u8 taskId)
 
 void sub_80ADEAC(u8 taskId)
 {
-    gBattle_BG1_Y -= 7;
-    if (gBattle_BG1_Y < 0)
+    if ((s16)(gBattle_BG1_Y -= 7) < 0)
         gBattle_BG1_Y = 0;
-    if (*(u16 *)&gBattle_BG1_Y == 0)  // Why cast?
+    if (gBattle_BG1_Y == 0)  // Why cast?
     {
         gTasks[taskId].func = sub_80ADEEC;
         gTasks[taskId].data[0] = 0;
@@ -2042,7 +2027,7 @@ void sub_80ADEEC(u8 taskId)
         }
         else
         {
-            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
             gTasks[taskId].func = sub_80ADFD8;
         }
     }
@@ -2061,7 +2046,7 @@ void sub_80ADF4C(u8 taskId)
 void sub_80ADF98(u8 taskId)
 {
     DestroyTask(taskId);
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     gTasks[sContest.mainTaskId].func = sub_80ADFD8;
 }
 
@@ -2138,9 +2123,9 @@ void Contest_CreatePlayerMon(u8 partyIndex)
     }
     memcpy(gContestMons[gContestPlayerMonIndex].trainerName, name, 8);
     if (gSaveBlock2.playerGender == MALE)
-        gContestMons[gContestPlayerMonIndex].trainerGfxId = MAP_OBJ_GFX_LINK_BRENDAN;
+        gContestMons[gContestPlayerMonIndex].trainerGfxId = EVENT_OBJ_GFX_LINK_BRENDAN;
     else
-        gContestMons[gContestPlayerMonIndex].trainerGfxId = MAP_OBJ_GFX_LINK_MAY;
+        gContestMons[gContestPlayerMonIndex].trainerGfxId = EVENT_OBJ_GFX_LINK_MAY;
     gContestMons[gContestPlayerMonIndex].flags = 0;
     gContestMons[gContestPlayerMonIndex].unk2C[0] = 0;
     gContestMons[gContestPlayerMonIndex].species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
@@ -3638,7 +3623,7 @@ void sub_80B03D8(u8 taskId)
     {
         gTasks[sContest.unk19211].data[r4 * 4 + 0] = 0xFF;
         gTasks[sContest.unk19211].data[r4 * 4 + 1] = 0;
-        BlendPalette((sContest.unk19218[r4] + 5) * 16 + 6, 2, 0, 0x4BFF);
+        BlendPalette((sContest.unk19218[r4] + 5) * 16 + 6, 2, 0, RGB(31, 31, 18));
         DestroyTask(taskId);
     }
 }
@@ -3666,7 +3651,7 @@ void sub_80B0458(u8 taskId)
               (sContest.unk19218[i] + 5) * 16 + 6,
               2,
               gTasks[taskId].data[r3 + 0],
-              0x4BFF);
+              RGB(31, 31, 18));
         }
     }
 }
@@ -3746,8 +3731,8 @@ void sub_80B05FC(u8 taskId)
                  || gTasks[taskId].data[r3 + 0] == 0)
                     gTasks[taskId].data[r3 + 1] ^= 1;
 
-                BlendPalette((i + 5) * 16 + 10, 1, gTasks[taskId].data[r3 + 0], 0x4BFF);
-                BlendPalette((i + 5) * 16 + 12 + i, 1, gTasks[taskId].data[r3 + 0], 0x4BFF);
+                BlendPalette((i + 5) * 16 + 10, 1, gTasks[taskId].data[r3 + 0], RGB(31, 31, 18));
+                BlendPalette((i + 5) * 16 + 12 + i, 1, gTasks[taskId].data[r3 + 0], RGB(31, 31, 18));
             }
         }
     }
@@ -3798,7 +3783,7 @@ void sub_80B0748(u8 taskId)
                 {
                     //_080B07D2
                     r6 = 0;
-                    BlendPalette((r4 + 5) * 16 + 1, 3, r5, 0x7FFF);
+                    BlendPalette((r4 + 5) * 16 + 1, 3, r5, RGB(31, 31, 31));
                     if (r5 == 0 && r8 == 4)
                     {
                         gTasks[taskId].data[r1 + 0] = 0;
@@ -3839,8 +3824,8 @@ void sub_80B0748(u8 taskId)
                             r8++;
                             if (r7 == 4 && r8 == 1)
                             {
-                                BlendPalette((r4 + 9) * 16 + 2, 1, 4, 0);
-                                BlendPalette((r4 + 9) * 16 + 5, 1, 4, 0);
+                                BlendPalette((r4 + 9) * 16 + 2, 1, 4, RGB(0, 0, 0));
+                                BlendPalette((r4 + 9) * 16 + 5, 1, 4, RGB(0, 0, 0));
                             }
                         }
                     }
@@ -3854,7 +3839,7 @@ void sub_80B0748(u8 taskId)
                 if (r6 == 12)
                 {
                     r6 = 0;
-                    BlendPalette((r4 + 5) * 16 + 1, 3, r5, 0);
+                    BlendPalette((r4 + 5) * 16 + 1, 3, r5, RGB(0, 0, 0));
                     r5 += 1;
                     if (r5 == 5)
                     {
@@ -4834,13 +4819,13 @@ void c3_08130B10(u8 taskId)
             gTasks[taskId].data[4]++;
         else
             gTasks[taskId].data[4]--;
-        BlendPalette(264 + gTasks[taskId].data[2] * 16, 1, gTasks[taskId].data[4], 0x7FFF);
+        BlendPalette(264 + gTasks[taskId].data[2] * 16, 1, gTasks[taskId].data[4], RGB(31, 31, 31));
         if (gTasks[taskId].data[4] == 0 || gTasks[taskId].data[4] == 16)
         {
             gTasks[taskId].data[3] ^= 1;
             if (sContest.applauseLevel < 5)
             {
-                BlendPalette(264 + gTasks[taskId].data[2] * 16, 1, 0, 31);
+                BlendPalette(264 + gTasks[taskId].data[2] * 16, 1, 0, RGB(31, 0, 0));
                 DestroyTask(taskId);
             }
         }
@@ -5177,10 +5162,9 @@ void sub_80B237C(u8 taskId)
 
 void sub_80B23BC(u8 taskId)
 {
-    gBattle_BG1_Y -= 7;
-    if (gBattle_BG1_Y < 0)
+    if ((s16)(gBattle_BG1_Y -= 7) < 0)
         gBattle_BG1_Y = 0;
-    if (*(u16 *)&gBattle_BG1_Y == 0)  // Why cast?
+    if (gBattle_BG1_Y == 0)  // Why cast?
     {
         gTasks[taskId].data[0] = 0;
         gTasks[taskId].data[1] = 0;
@@ -5240,8 +5224,7 @@ void sub_80B2400(u8 taskId)
 
 void sub_80B2508(u8 taskId)
 {
-    gBattle_BG1_Y += 7;
-    if (gBattle_BG1_Y > DISPLAY_HEIGHT)
+    if ((s16)(gBattle_BG1_Y += 7) > DISPLAY_HEIGHT)
         gTasks[taskId].func = sub_80ADCDC;
 }
 

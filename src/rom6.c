@@ -1,5 +1,5 @@
 #include "global.h"
-#include "constants/map_objects.h"
+#include "constants/event_objects.h"
 #include "constants/songs.h"
 #include "rom6.h"
 #include "braille_puzzles.h"
@@ -13,7 +13,9 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "constants/event_object_movement_constants.h"
 #include "constants/field_effects.h"
+#include "constants/map_types.h"
 
 extern u16 gSpecialVar_LastTalked;
 extern void (*gFieldCallback)(void);
@@ -34,18 +36,18 @@ static void sub_810B634(void);
 
 bool8 SetLastTalkedObjectInFrontOfPlayer(u8 graphicsId)
 {
-    u8 mapObjId;
+    u8 eventObjId;
 
     GetXYCoordsOneStepInFrontOfPlayer(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
     gPlayerFacingPosition.height = PlayerGetZCoord();
-    mapObjId = GetFieldObjectIdByXYZ(gPlayerFacingPosition.x, gPlayerFacingPosition.y, gPlayerFacingPosition.height);
-    if (gMapObjects[mapObjId].graphicsId != graphicsId)
+    eventObjId = GetEventObjectIdByXYZ(gPlayerFacingPosition.x, gPlayerFacingPosition.y, gPlayerFacingPosition.height);
+    if (gEventObjects[eventObjId].graphicsId != graphicsId)
     {
         return FALSE;
     }
     else
     {
-        gSpecialVar_LastTalked = gMapObjects[mapObjId].localId;
+        gSpecialVar_LastTalked = gEventObjects[eventObjId].localId;
         return TRUE;
     }
 }
@@ -58,13 +60,13 @@ u8 oei_task_add(void)
 
 static void task08_080C9820(u8 taskId)
 {
-    u8 mapObjId;
+    u8 eventObjId;
 
     ScriptContext2_Enable();
     gPlayerAvatar.preventStep = TRUE;
-    mapObjId = gPlayerAvatar.mapObjectId;
-    if (!FieldObjectIsSpecialAnimOrDirectionSequenceAnimActive(&gMapObjects[mapObjId])
-     || FieldObjectClearAnimIfSpecialAnimFinished(&gMapObjects[mapObjId]))
+    eventObjId = gPlayerAvatar.eventObjectId;
+    if (!EventObjectIsMovementOverridden(&gEventObjects[eventObjId])
+     || EventObjectClearHeldMovementIfFinished(&gEventObjects[eventObjId]))
     {
         if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
         {
@@ -74,7 +76,7 @@ static void task08_080C9820(u8 taskId)
         else
         {
             sub_8059BF4();
-            FieldObjectSetSpecialAnim(&gMapObjects[mapObjId], 0x39);
+            EventObjectSetHeldMovement(&gEventObjects[eventObjId], MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
             gTasks[taskId].func = sub_810B3DC;
         }
     }
@@ -82,7 +84,7 @@ static void task08_080C9820(u8 taskId)
 
 static void sub_810B3DC(u8 taskId)
 {
-    if (FieldObjectCheckIfSpecialAnimFinishedOrInactive(&gMapObjects[gPlayerAvatar.mapObjectId]) == TRUE)
+    if (EventObjectCheckHeldMovementStatus(&gEventObjects[gPlayerAvatar.eventObjectId]) == TRUE)
     {
         FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
         gTasks[taskId].func = sub_810B428;
@@ -91,9 +93,9 @@ static void sub_810B3DC(u8 taskId)
 
 static void sub_810B428(u8 taskId)
 {
-    if (!FieldEffectActiveListContains(6))
+    if (!FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
     {
-        gFieldEffectArguments[1] = player_get_direction_lower_nybble();
+        gFieldEffectArguments[1] = GetPlayerFacingDirection();
         if (gFieldEffectArguments[1] == 1)
             gFieldEffectArguments[2] = 0;
         if (gFieldEffectArguments[1] == 2)
@@ -102,7 +104,7 @@ static void sub_810B428(u8 taskId)
             gFieldEffectArguments[2] = 2;
         if (gFieldEffectArguments[1] == 4)
             gFieldEffectArguments[2] = 3;
-        sub_805B980(&gMapObjects[gPlayerAvatar.mapObjectId], GetPlayerAvatarGraphicsIdByCurrentState());
+        sub_805B980(&gEventObjects[gPlayerAvatar.eventObjectId], GetPlayerAvatarGraphicsIdByCurrentState());
         StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], gFieldEffectArguments[2]);
         FieldEffectActiveListRemove(6);
         gTasks[taskId].func = sub_810B4CC;
@@ -121,7 +123,7 @@ static void sub_810B4CC(u8 taskId)
 #if DEBUG
 void debug_sub_8120968(void)
 {
-    if (SetLastTalkedObjectInFrontOfPlayer(MAP_OBJ_GFX_BREAKABLE_ROCK) == TRUE)
+    if (SetLastTalkedObjectInFrontOfPlayer(EVENT_OBJ_GFX_BREAKABLE_ROCK) == TRUE)
     {
         gLastFieldPokeMenuOpened = 0;
         sub_810B53C();
@@ -135,7 +137,7 @@ void debug_sub_8120968(void)
 
 bool8 SetUpFieldMove_RockSmash(void)
 {
-    if (SetLastTalkedObjectInFrontOfPlayer(MAP_OBJ_GFX_BREAKABLE_ROCK) == TRUE)
+    if (SetLastTalkedObjectInFrontOfPlayer(EVENT_OBJ_GFX_BREAKABLE_ROCK) == TRUE)
     {
         gFieldCallback = FieldCallback_PrepareFadeInFromMenu;
         gPostMenuFieldCallback = sub_810B53C;

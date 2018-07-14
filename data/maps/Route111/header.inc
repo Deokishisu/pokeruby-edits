@@ -1,14 +1,14 @@
 Route111:: @ 8305720
-	.4byte Route111_MapAttributes
+	.4byte Route111_Layout
 	.4byte Route111_MapEvents
 	.4byte Route111_MapScripts
 	.4byte Route111_MapConnections
-	.2byte BGM_DOORO_X1
+	.2byte MUS_DOORO_X1
 	.2byte 27
-	.byte 26
+	.byte MAPSEC_ROUTE_111
 	.byte 0
-	.byte 2
-	.byte 3
+	.byte WEATHER_SUNNY
+	.byte MAP_TYPE_ROUTE
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

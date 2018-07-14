@@ -10,6 +10,7 @@
 #include "link.h"
 #include "m4a.h"
 #include "main.h"
+#include "move_tutor_menu.h"
 #include "pokemon.h"
 #include "random.h"
 #include "overworld.h"
@@ -993,18 +994,18 @@ u32 CanMonLearnTMHM(struct Pokemon *mon, u8 tm)
     }
 }
 
-u8 GetMoveRelearnerMoves(struct Pokemon *mon, u16 *moves)
+u8 GetMoveTutorMoves(struct Pokemon *mon, u16 *moves)
 {
-    u16 learnedMoves[4];
+    u16 knownMoves[4];
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, 0);
     u8 level = GetMonData(mon, MON_DATA_LEVEL, 0);
     int i, j, k;
 
     for (i = 0; i < 4; i++)
-        learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
+        knownMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
-    for (i = 0; i < 20; i++)
+    for (i = 0; i < MAX_MOVE_TUTOR_MOVES; i++)
     {
         u16 moveLevel;
 
@@ -1012,10 +1013,9 @@ u8 GetMoveRelearnerMoves(struct Pokemon *mon, u16 *moves)
             break;
 
         moveLevel = gLevelUpLearnsets[species][i] & 0xFE00;
-
         if (moveLevel <= (level << 9))
         {
-            for (j = 0; j < 4 && learnedMoves[j] != (gLevelUpLearnsets[species][i] & 0x1FF); j++)
+            for (j = 0; j < 4 && knownMoves[j] != (gLevelUpLearnsets[species][i] & 0x1FF); j++)
                 ;
 
             if (j == 4)
@@ -1108,48 +1108,48 @@ void ClearBattleMonForms(void)
         gBattleMonForms[i] = 0;
 }
 
-u16 GetBGM_ForBattle(void)
+u16 GetMUS_ForBattle(void)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_KYOGRE_GROUDON)
-        return BGM_BATTLE34;
+        return MUS_BATTLE34;
     if (gBattleTypeFlags & BATTLE_TYPE_REGI)
-        return BGM_BATTLE36;
+        return MUS_BATTLE36;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-        return BGM_BATTLE20;
+        return MUS_BATTLE20;
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         switch (gTrainers[gTrainerBattleOpponent].trainerClass)
         {
         case 2:
         case 0x31:
-            return BGM_BATTLE30;
+            return MUS_BATTLE30;
         case 3:
         case 4:
         case 0x32:
         case 0x33:
-            return BGM_BATTLE31;
+            return MUS_BATTLE31;
         case 0x19:
-            return BGM_BATTLE32;
+            return MUS_BATTLE32;
         case 0x20:
-            return BGM_BATTLE33;
+            return MUS_BATTLE33;
         case 0x2E:
             if (!StringCompare(gTrainers[gTrainerBattleOpponent].trainerName, BattleText_Wally))
-                return BGM_BATTLE20;
-            return BGM_BATTLE35;
+                return MUS_BATTLE20;
+            return MUS_BATTLE35;
         case 0x18:
-            return BGM_BATTLE38;
+            return MUS_BATTLE38;
         default:
-            return BGM_BATTLE20;
+            return MUS_BATTLE20;
         }
     }
-    return BGM_BATTLE27;
+    return MUS_BATTLE27;
 }
 
 void sub_80408BC(void)
 {
     ResetMapMusic();
     m4aMPlayAllStop();
-    PlayBGM(GetBGM_ForBattle());
+    PlayBGM(GetMUS_ForBattle());
 }
 
 void current_map_music_set__default_for_battle(u16 song)
@@ -1159,7 +1159,7 @@ void current_map_music_set__default_for_battle(u16 song)
     if (song)
         PlayNewMapMusic(song);
     else
-        PlayNewMapMusic(GetBGM_ForBattle());
+        PlayNewMapMusic(GetMUS_ForBattle());
 }
 
 const u8 *GetMonSpritePal(struct Pokemon *mon)

@@ -38,14 +38,13 @@
 #include "ewram.h"
 
 // External stuff
-extern void gpu_pal_allocator_reset__manage_upper_four(void);
+extern void FreeAndReserveObjectSpritePalettes(void);
 extern void SetVerticalScrollIndicatorPriority();
 extern void sub_809D104(u16 *, u16, u16, const u8 *, u16, u16, u16, u16);
 extern void PauseVerticalScrollIndicator();
 extern u8 sub_80F9284(void);
 extern void sub_808B5B4();
 extern u8 sub_80F92F4();
-extern void sub_80C9C7C(u8);
 extern void pal_fill_black(void);
 extern bool8 IsWeatherNotFadingIn(void);
 extern u8 sub_80F931C();
@@ -54,7 +53,7 @@ extern void Shop_FadeReturnToMartMenu(void);
 extern void sub_80546B8(u8);
 extern void sub_804E990(u8);
 extern void sub_802E424(u8);
-extern void sub_8064E2C(void);
+extern void ScriptUnfreezeEventObjects(void);
 
 struct UnknownStruct2
 {
@@ -140,7 +139,7 @@ EWRAM_DATA static s8 gUnknown_0203855B = 0;
 EWRAM_DATA static s8 gUnknown_0203855C = 0;
 EWRAM_DATA u16 gSpecialVar_ItemId = 0;
 EWRAM_DATA u8 gCurSelectedItemSlotIndex = 0;
-EWRAM_DATA u8 gUnknown_02038561 = 0;
+EWRAM_DATA u8 gPokemonItemUseType = 0;
 EWRAM_DATA static u8 gUnknown_02038562 = 0;
 EWRAM_DATA static u8 gUnknown_02038563 = 0;
 EWRAM_DATA static u8 gUnknown_02038564 = 0;
@@ -392,7 +391,7 @@ static bool8 SetupBagMultistep(void)
         gMain.state++;
         break;
     case 2:
-        gpu_pal_allocator_reset__manage_upper_four();
+        FreeAndReserveObjectSpritePalettes();
         gMain.state++;
         break;
     case 3:
@@ -478,7 +477,7 @@ static bool8 SetupBagMultistep(void)
         REG_IE |= INTR_FLAG_VBLANK;
         REG_IME = savedIme;
         REG_DISPSTAT |= DISPSTAT_VBLANK_INTR;
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB(0, 0, 0));
         gPaletteFade.bufferTransferDisabled = FALSE;
         gMain.state++;
         break;
@@ -1115,9 +1114,9 @@ static void sub_80A41E0(u8 *a, u16 b, const u8 *c, u16 d, u8 e)
     a[1] = 0x13;
     a[2] = 0x18;
     a += 3;
-    a = sub_8072C74(a, c, 0x78 - (e + 1) * 6, 0);
+    a = AlignStringInMenuWindow(a, c, 0x78 - (e + 1) * 6, 0);
     *a++ = CHAR_MULT_SIGN;
-    sub_8072C14(a, d, 0x78, 1);
+    AlignInt1InMenuWindow(a, d, 0x78, 1);
 }
 
 static u8 *sub_80A425C(u8 taskId, u8 *text, u8 c)
@@ -1145,7 +1144,7 @@ static bool8 sub_80A42B0(u8 itemPos, int b)
         if (sReturnLocation == RETURN_TO_FIELD_5)
             return TRUE;
         r5 = itemPos * 2 + 2;
-        sub_8072C74(gStringVar1, gOtherText_CloseBag, 0x78, 0);
+        AlignStringInMenuWindow(gStringVar1, gOtherText_CloseBag, 0x78, 0);
         Menu_PrintText(gStringVar1, 14, r5);
         ptr = gBGTilemapBuffers[2] + 14 + r5 * 32;
         ptr[0] = 0x4F;
@@ -1179,9 +1178,9 @@ static void sub_80A4380(u16 a, int b, int c, int d)
         r5 = i * 2 + 2;
         text = gStringVar1;
         text = sub_80A425C(a, text, i);
-        text = sub_8072C74(text, ItemId_GetName(gCurrentBagPocketItemSlots[r4].itemId), 0x66, 0);
+        text = AlignStringInMenuWindow(text, ItemId_GetName(gCurrentBagPocketItemSlots[r4].itemId), 0x66, 0);
         *text++ = CHAR_MULT_SIGN;
-        sub_8072C14(text, gCurrentBagPocketItemSlots[r4].quantity, 0x78, 1);
+        AlignInt1InMenuWindow(text, gCurrentBagPocketItemSlots[r4].quantity, 0x78, 1);
         Menu_PrintText(gStringVar1, 14, r5);
     }
 }
@@ -1203,9 +1202,9 @@ static void sub_80A444C(u16 a, int b, int c, int d)
         text = gStringVar1;
         text = sub_80A425C(a, text, i);
 #if ENGLISH
-        sub_8072C74(text, ItemId_GetName(gCurrentBagPocketItemSlots[slot].itemId), 0x60, 0);
+        AlignStringInMenuWindow(text, ItemId_GetName(gCurrentBagPocketItemSlots[slot].itemId), 0x60, 0);
 #else
-        sub_8072C74(text, ItemId_GetName(gCurrentBagPocketItemSlots[slot].itemId), 0x63, 0);
+        AlignStringInMenuWindow(text, ItemId_GetName(gCurrentBagPocketItemSlots[slot].itemId), 0x63, 0);
 #endif
         Menu_PrintText(gStringVar1, 14, r5);
         if (gUnknown_02038558)
@@ -1272,7 +1271,7 @@ static void sub_80A4548(u16 a, int b, int c, int d)
             text[2] = 0x18;
             text += 3;
             moveName = gMoveNames[ItemIdToBattleMoveId(gCurrentBagPocketItemSlots[r4].itemId)];
-            sub_8072C74(text, moveName, 0x78, 0);
+            AlignStringInMenuWindow(text, moveName, 0x78, 0);
         }
         Menu_PrintText(gStringVar1, 14, sp10);
     }
@@ -1450,7 +1449,7 @@ _080A4634:\n\
     adds r0, r6, 0\n\
     movs r2, 0x78\n\
     movs r3, 0\n\
-    bl sub_8072C74\n\
+    bl AlignStringInMenuWindow\n\
 _080A46AE:\n\
     ldr r0, _080A46F8 @ =gStringVar1\n\
     movs r1, 0xE\n\
@@ -2647,7 +2646,7 @@ static void OnItemSelect_Field05(u8 taskId)
 
 static void sub_80A5AAC(u8 taskId)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
     gTasks[taskId].func = HandleItemMenuPaletteFade;
 }
 
@@ -2666,7 +2665,7 @@ void HandleItemMenuPaletteFade(u8 taskId)
         MainCallback cb = (MainCallback)((u16)taskData[8] << 16 | (u16)taskData[9]);
 
         SetMainCallback2(cb);
-        gpu_pal_allocator_reset__manage_upper_four();
+        FreeAndReserveObjectSpritePalettes();
         DestroyTask(taskId);
     }
 }
@@ -2701,7 +2700,7 @@ static void HandlePopupMenuAction_UseOnField(u8 taskId)
             if (sCurrentBagPocket != BAG_POCKET_BERRIES)
                 ItemId_GetFieldFunc(gSpecialVar_ItemId)(taskId);
             else
-                sub_80C9C7C(taskId);
+                ItemUseOutOfBattle_Berry(taskId);
         }
     }
 }
@@ -2733,7 +2732,7 @@ void CleanUpOverworldMessage(u8 taskId)
 {
     Menu_EraseWindowRect(0, 13, 29, 19);
     DestroyTask(taskId);
-    sub_8064E2C();
+    ScriptUnfreezeEventObjects();
     ScriptContext2_Disable();
 }
 
@@ -2925,8 +2924,8 @@ static void HandlePopupMenuAction_Give(u8 taskId)
             gTasks[taskId].data[8] = (u32)sub_808B020 >> 16;
             gTasks[taskId].data[9] = (u32)sub_808B020;
             gTasks[taskId].func = HandleItemMenuPaletteFade;
-            gUnknown_02038561 = 1;
-            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+            gPokemonItemUseType = ITEM_USE_GIVE_ITEM;
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         }
     }
     else
@@ -3346,17 +3345,17 @@ static void OnItemSelect_PC(u8 taskId)
     }
 }
 
-bool32 sub_80A6D1C(void)
+bool32 UseRegisteredKeyItem(void)
 {
     HideMapNamePopup();
-    if (gSaveBlock1.registeredItem != 0)
+    if (gSaveBlock1.registeredItem != ITEM_NONE)
     {
         if (CheckBagHasItem(gSaveBlock1.registeredItem, 1) == TRUE)
         {
             u8 taskId;
 
             ScriptContext2_Enable();
-            FreezeMapObjects();
+            FreezeEventObjects();
             sub_80594C0();
             sub_80597F4();
             gSpecialVar_ItemId = gSaveBlock1.registeredItem;
@@ -3477,7 +3476,7 @@ void sub_80A7094(u8 taskId)
     gTasks[taskId].data[8] = (u32)sub_802E424 >> 16;
     gTasks[taskId].data[9] = (u32)sub_802E424;
     gTasks[taskId].func = HandleItemMenuPaletteFade;
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
 }
 
 static void OnBagClose_Battle(u8 taskId)
@@ -3578,7 +3577,7 @@ static void sub_80A7230(u8 taskId)
         taskData[8] = (u32)sub_802E424 >> 16;
         taskData[9] = (u32)sub_802E424;
         gTasks[taskId].func = HandleItemMenuPaletteFade;
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
         return;
     }
     taskData[15]++;

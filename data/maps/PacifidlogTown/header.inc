@@ -1,14 +1,14 @@
 PacifidlogTown:: @ 83055EC
-	.4byte PacifidlogTown_MapAttributes
+	.4byte PacifidlogTown_Layout
 	.4byte PacifidlogTown_MapEvents
 	.4byte PacifidlogTown_MapScripts
 	.4byte PacifidlogTown_MapConnections
-	.2byte BGM_MINAMO
+	.2byte MUS_MINAMO
 	.2byte 16
-	.byte 6
+	.byte MAPSEC_PACIFIDLOG_TOWN
 	.byte 0
-	.byte 2
-	.byte 1
+	.byte WEATHER_SUNNY
+	.byte MAP_TYPE_TOWN
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

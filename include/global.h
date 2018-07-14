@@ -96,7 +96,7 @@ enum LanguageId
 // capacities of various saveblock objects
 #define DAYCARE_MON_COUNT   2
 #define POKEBLOCKS_COUNT    40
-#define MAP_OBJECTS_COUNT   16
+#define EVENT_OBJECTS_COUNT   16
 #define BERRY_TREES_COUNT   128
 #define FLAGS_COUNT         288
 #define VARS_COUNT          256
@@ -649,7 +649,7 @@ struct SaveBlock1 /* 0x02025734 */
     /*0x2E*/ u8 weather;
     /*0x2F*/ u8 weatherCycleStage;
     /*0x30*/ u8 flashLevel;  // flash level on current map, 0 being normal and 4 being the darkest
-    /*0x32*/ u16 mapDataId;
+    /*0x32*/ u16 mapLayoutId;
     /*0x34*/ u16 mapView[0x100];
     /*0x234*/ u8 playerPartyCount;
     /*0x238*/ struct Pokemon playerParty[6];
@@ -668,8 +668,8 @@ struct SaveBlock1 /* 0x02025734 */
     /*0x972*/ u8 filler_972[0x6];
     /*0x978*/ u16 trainerRematchStepCounter;
     /*0x97A*/ u8 trainerRematches[100];
-    /*0x9E0*/ struct MapObject mapObjects[MAP_OBJECTS_COUNT];
-    /*0xC20*/ struct MapObjectTemplate mapObjectTemplates[64];
+    /*0x9E0*/ struct EventObject eventObjects[EVENT_OBJECTS_COUNT];
+    /*0xC20*/ struct EventObjectTemplate eventObjectTemplates[64];
     /*0x1220*/ u8 flags[FLAGS_COUNT];
     /*0x1340*/ u16 vars[VARS_COUNT];
     /*0x1540*/ u32 gameStats[NUM_GAME_STATS];

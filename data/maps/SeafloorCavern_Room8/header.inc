@@ -1,14 +1,14 @@
 SeafloorCavern_Room8:: @ 8307144
-	.4byte SeafloorCavern_Room8_MapAttributes
+	.4byte SeafloorCavern_Room8_Layout
 	.4byte SeafloorCavern_Room8_MapEvents
 	.4byte SeafloorCavern_Room8_MapScripts
 	.4byte 0x0
-	.2byte BGM_TOZAN
+	.2byte MUS_TOZAN
 	.2byte 156
-	.byte 68
+	.byte MAPSEC_SEAFLOOR_CAVERN
 	.byte 0
-	.byte 0
-	.byte 4
+	.byte WEATHER_NONE
+	.byte MAP_TYPE_UNDERGROUND
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

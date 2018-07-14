@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_anim_813F0F4.h"
 #include "battle_interface.h"
 #include "blend_palette.h"
 #include "contest.h"
@@ -95,7 +96,6 @@ const struct SpritePalette gUnknown_0820A4D4[] =
 extern void c3_0802FDF4(u8);
 extern void sub_80440EC();
 extern void sub_804777C();
-extern void sub_8141828();
 extern u8 GetBattlerSpriteCoord();
 extern u8 IsBankSpritePresent(u8);
 extern u8 sub_8077F68(u8);
@@ -334,7 +334,7 @@ void BattleLoadOpponentMonSprite(struct Pokemon *pkmn, u8 b)
     }
     if (ewram17800[b].transformedSpecies != 0)
     {
-        BlendPalette(paletteOffset, 16, 6, 0x7FFF);
+        BlendPalette(paletteOffset, 16, 6, RGB(31, 31, 31));
         CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, 32);
     }
 }
@@ -386,7 +386,7 @@ void BattleLoadPlayerMonSprite(struct Pokemon *pkmn, u8 b)
     }
     if (ewram17800[b].transformedSpecies != 0)
     {
-        BlendPalette(paletteOffset, 16, 6, 0x7FFF);
+        BlendPalette(paletteOffset, 16, 6, RGB(31, 31, 31));
         CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, 32);
     }
 }
@@ -523,7 +523,7 @@ bool8 sub_8031C30(u8 a)
     return retVal;
 }
 
-void load_gfxc_health_bar(void)
+void load_gfxc_health_bar(u8 a)
 {
     LZDecompressWram(gUnknown_08D09C48, eVoidSharedArr);
 }
@@ -646,7 +646,7 @@ void sub_8031FC4(u8 a, u8 b, bool8 c)
         gBattleMonForms[a] = ewram17840.unk0;
         if (ewram17800[a].transformedSpecies != 0)
         {
-            BlendPalette(paletteOffset, 16, 6, 0x7FFF);
+            BlendPalette(paletteOffset, 16, 6, RGB(31, 31, 31));
             CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, 32);
         }
         gSprites[gBankSpriteIds[a]].pos1.y = sub_8077F68(a);
@@ -714,7 +714,7 @@ void sub_8031FC4(u8 a, u8 b, bool8 c)
             LZDecompressWram(lzPaletteData, paletteSrc);
             LoadPalette(paletteSrc + gBattleMonForms[b] * 16, paletteOffset, 32);
         }
-        BlendPalette(paletteOffset, 16, 6, 0x7FFF);
+        BlendPalette(paletteOffset, 16, 6, RGB(31, 31, 31));
         CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, 32);
         if (!IsContest())
         {

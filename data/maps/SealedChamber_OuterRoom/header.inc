@@ -1,14 +1,14 @@
 SealedChamber_OuterRoom:: @ 8307534
-	.4byte SealedChamber_OuterRoom_MapAttributes
+	.4byte SealedChamber_OuterRoom_Layout
 	.4byte SealedChamber_OuterRoom_MapEvents
 	.4byte SealedChamber_OuterRoom_MapScripts
 	.4byte 0x0
-	.2byte BGM_MABOROSI
+	.2byte MUS_MABOROSI
 	.2byte 285
-	.byte 78
+	.byte MAPSEC_SEALED_CHAMBER
 	.byte 0
-	.byte 0
-	.byte 4
+	.byte WEATHER_NONE
+	.byte MAP_TYPE_UNDERGROUND
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

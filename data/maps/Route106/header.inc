@@ -1,14 +1,14 @@
 Route106:: @ 8305694
-	.4byte Route106_MapAttributes
+	.4byte Route106_Layout
 	.4byte Route106_MapEvents
 	.4byte Route106_MapScripts
 	.4byte Route106_MapConnections
-	.2byte BGM_NEXTROAD
+	.2byte MUS_NEXTROAD
 	.2byte 22
-	.byte 21
+	.byte MAPSEC_ROUTE_106
 	.byte 0
-	.byte 2
-	.byte 3
+	.byte WEATHER_SUNNY
+	.byte MAP_TYPE_ROUTE
 	.2byte 0
 	.byte 1
-	.byte 0
+	.byte MAP_BATTLE_SCENE_NORMAL

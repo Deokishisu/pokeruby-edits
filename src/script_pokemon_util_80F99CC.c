@@ -19,7 +19,7 @@
 #include "text.h"
 #include "ewram.h"
 
-extern const u8 gUnknown_08208238[];
+extern const u8 gPPUpReadMasks[];
 
 extern u8 gPlayerPartyCount;
 extern u16 gSpecialVar_0x8004;
@@ -36,7 +36,7 @@ void sub_80F99CC(void)
     ScriptContext2_Enable();
     taskId = CreateTask((void *)OpenPartyMenuFromScriptContext, 0xA);
     gTasks[taskId].data[0] = PARTY_MENU_TYPE_CONTEST;
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
 }
 
 void SelectMonForNPCTrade(void)
@@ -46,7 +46,7 @@ void SelectMonForNPCTrade(void)
     ScriptContext2_Enable();
     taskId = CreateTask((void *)OpenPartyMenuFromScriptContext, 0xA);
     gTasks[taskId].data[0] = PARTY_MENU_TYPE_IN_GAME_TRADE;
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
 }
 
 void SelectMoveTutorMon(void)
@@ -56,7 +56,7 @@ void SelectMoveTutorMon(void)
     ScriptContext2_Enable();
     taskId = CreateTask((void *)OpenPartyMenuFromScriptContext, 0xA);
     gTasks[taskId].data[0] = PARTY_MENU_TYPE_MOVE_TUTOR;
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
 }
 
 void OpenPartyMenuFromScriptContext(u8 taskId)
@@ -144,11 +144,11 @@ void sub_80F9C00(void)
         case 0:
         case 3:
         case 4:
-            sub_806BC3C(i, 0x7E);
+            DrawMonDescriptorStatus(i, 0x7E);
             break;
         case 1:
         case 2:
-            sub_806BC3C(i, 0x70);
+            DrawMonDescriptorStatus(i, 0x70);
             break;
         }
     }
@@ -246,9 +246,9 @@ void sub_80F9E1C(void)
     for (i = 0; i < gPlayerPartyCount; i++)
     {
         if (!sub_8040574(&gPlayerParty[i]))
-            sub_806BC3C(i, 0x9A);
+            DrawMonDescriptorStatus(i, 0x9A);
         else
-            sub_806BC3C(i, 0x8C);
+            DrawMonDescriptorStatus(i, 0x8C);
     }
 }
 
@@ -307,11 +307,11 @@ void sub_80F9FDC(struct Pokemon *pkmn, u8 moveIndex1, u8 moveIndex2)
     u8 pp2 = GetMonData(pkmn, MON_DATA_PP1 + moveIndex2);
     u8 bonuses = GetMonData(pkmn, MON_DATA_PP_BONUSES);
 
-    u8 r2 = (bonuses & gUnknown_08208238[moveIndex1]) >> (moveIndex1 * 2);
-    u8 r1 = (bonuses & gUnknown_08208238[moveIndex2]) >> (moveIndex2 * 2);
+    u8 r2 = (bonuses & gPPUpReadMasks[moveIndex1]) >> (moveIndex1 * 2);
+    u8 r1 = (bonuses & gPPUpReadMasks[moveIndex2]) >> (moveIndex2 * 2);
 
-    bonuses &= ~gUnknown_08208238[moveIndex1];
-    bonuses &= ~gUnknown_08208238[moveIndex2];
+    bonuses &= ~gPPUpReadMasks[moveIndex1];
+    bonuses &= ~gPPUpReadMasks[moveIndex2];
     bonuses |= (r2 << (moveIndex2 * 2)) + (r1 << (moveIndex1 * 2));
 
     SetMonData(pkmn, MON_DATA_MOVE1 + moveIndex1, &move2);

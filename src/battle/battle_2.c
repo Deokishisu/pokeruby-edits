@@ -121,22 +121,10 @@ extern u16 gUnknown_02024DE8;
 extern u8 gActionSelectionCursor[];
 extern u8 gMoveSelectionCursor[];
 extern u8 gUnknown_02038470[];
-extern u16 gBattle_BG3_X;
-extern u16 gBattle_BG1_Y;
-extern u16 gBattle_BG3_Y;
 extern struct Window gUnknown_030041D0;
-extern u16 gBattle_WIN1H;
 extern struct Window gUnknown_03004210;
-extern u16 gBattle_WIN1V;
 extern struct Window gUnknown_03004250;
-extern u16 gBattle_WIN0V;
-extern u16 gBattle_BG2_Y;
 extern u32 gUnknown_03004284;
-extern u16 gBattle_BG2_X;
-extern u16 gBattle_BG0_Y;
-extern u16 gBattle_BG0_X;
-extern u16 gBattle_BG1_X;
-extern u16 gBattle_WIN0H;
 extern MainCallback gPreBattleCallback1;
 extern void (*gBattleMainFunc)(void);
 extern u8 gLeveledUpInBattle;
@@ -1346,7 +1334,7 @@ void c2_081284E0(void)
         gBattleCommunication[1]--;
         if (gBattleCommunication[1] == 0)
         {
-            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB(0, 0, 0));
             gBattleCommunication[0]++;
         }
         break;
@@ -3280,7 +3268,7 @@ void oac_poke_opponent(struct Sprite *sprite)
 {
     sprite->callback = sub_8010278;
     StartSpriteAnimIfDifferent(sprite, 0);
-    BeginNormalPaletteFade(0x00020000, 0, 10, 10, 0x3DEF);
+    BeginNormalPaletteFade(0x00020000, 0, 10, 10, RGB(15, 15, 15));
 }
 
 void sub_8010278(struct Sprite *sprite)
@@ -3304,7 +3292,7 @@ void sub_80102AC(struct Sprite *sprite)
         sub_8043DFC(gHealthboxIDs[sprite->data[0]]);
         sprite->callback = nullsub_37;
         StartSpriteAnimIfDifferent(sprite, 0);
-        BeginNormalPaletteFade(0x00020000, 0, 10, 0, 0x3DEF);
+        BeginNormalPaletteFade(0x00020000, 0, 10, 0, RGB(15, 15, 15));
     }
 }
 
@@ -3698,7 +3686,7 @@ void sub_8010874(void)
     ewram160C9 = 6;
     ewram16113 = 0;
     for (i = 0; i < 11; i++)
-        gBattleResults.unk36[i] = 0;
+        gBattleResults.usedBalls[i] = 0;
     gBattleResults.battleTurnCounter = 0;
     gBattleResults.playerFaintCounter = 0;
     gBattleResults.opponentFaintCounter = 0;
@@ -6339,7 +6327,7 @@ void HandleEndTurn_BattleWon(void)
         {
         case TRAINER_CLASS_ELITE_FOUR:
         case TRAINER_CLASS_CHAMPION:
-            PlayBGM(BGM_KACHI5);
+            PlayBGM(MUS_KACHI5);
             break;
         case TRAINER_CLASS_TEAM_AQUA:
         case TRAINER_CLASS_TEAM_MAGMA:
@@ -6347,13 +6335,13 @@ void HandleEndTurn_BattleWon(void)
         case TRAINER_CLASS_AQUA_LEADER:
         case TRAINER_CLASS_MAGMA_ADMIN:
         case TRAINER_CLASS_MAGMA_LEADER:
-            PlayBGM(BGM_KACHI4);
+            PlayBGM(MUS_KACHI4);
             break;
         case TRAINER_CLASS_LEADER:
-            PlayBGM(BGM_KACHI3);
+            PlayBGM(MUS_KACHI3);
             break;
         default:
-            PlayBGM(BGM_KACHI1);
+            PlayBGM(MUS_KACHI1);
             break;
         }
     }
